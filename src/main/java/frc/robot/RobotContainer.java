@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.LightstripConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -41,15 +43,18 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Lightstrip lightstrip;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    lightstrip = new Lightstrip();
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -146,6 +151,33 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    operator
+        .x()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    lightstrip.tempColor(
+                        LightstripConstants.successSignal, LightstripConstants.Ranges.full),
+                lightstrip));
+
+    operator
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    lightstrip.setColor(
+                        LightstripConstants.holdingState, LightstripConstants.Ranges.full),
+                lightstrip));
+
+    operator
+        .a()
+        .onTrue(
+            Commands.runOnce(
+                () ->
+                    lightstrip.setColor(
+                        LightstripConstants.defaultState, LightstripConstants.Ranges.full),
+                lightstrip));
   }
 
   /**
