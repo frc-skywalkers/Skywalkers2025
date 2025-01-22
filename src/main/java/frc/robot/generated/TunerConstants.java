@@ -29,7 +29,7 @@ public class TunerConstants {
   // k values from Skywalkers2024
   private static final Slot0Configs steerGains =
       new Slot0Configs()
-          .withKP(3.5)
+          .withKP(3.5) // 3.5
           .withKI(0)
           .withKD(0.05)
           .withKS(0.2)
