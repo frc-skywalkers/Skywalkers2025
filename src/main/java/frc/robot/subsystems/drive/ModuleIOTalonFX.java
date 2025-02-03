@@ -59,7 +59,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final TalonFX turnTalon;
   private final CANcoder cancoder;
 
-  // Voltage control requests (?)
+  // Voltage control requests
   private final VoltageOut voltageRequest = new VoltageOut(0);
   private final PositionVoltage positionVoltageRequest = new PositionVoltage(0.0);
   private final VelocityVoltage velocityVoltageRequest = new VelocityVoltage(0.0);
@@ -118,7 +118,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveConfig.MotionMagic.MotionMagicCruiseVelocity = 15.0;
     driveConfig.MotionMagic.MotionMagicAcceleration = 10.0;
     driveConfig.MotionMagic.MotionMagicJerk = 12.5;
-    // ?
+
     tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
     tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
@@ -132,14 +132,15 @@ public class ModuleIOTalonFX implements ModuleIO {
           case RemoteCANcoder -> FeedbackSensorSourceValue.RemoteCANcoder;
           case FusedCANcoder -> FeedbackSensorSourceValue.FusedCANcoder;
           case SyncCANcoder -> FeedbackSensorSourceValue.SyncCANcoder;
+          default -> throw new RuntimeException(
+              "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
         };
-    turnConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio; // ?
-    turnConfig.MotionMagic.MotionMagicCruiseVelocity =
-        100.0 / constants.SteerMotorGearRatio; // 1.5?
+    turnConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
+    turnConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
     turnConfig.MotionMagic.MotionMagicAcceleration =
-        turnConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100; // 4.5?
-    turnConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio; // ok
-    turnConfig.MotionMagic.MotionMagicExpo_kA = 0.1; // 0.05?
+        turnConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
+    turnConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
+    turnConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
     turnConfig.ClosedLoopGeneral.ContinuousWrap = true;
     turnConfig.MotorOutput.Inverted =
         constants.SteerMotorInverted

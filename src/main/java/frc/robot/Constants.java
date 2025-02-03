@@ -14,9 +14,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.lightstrip.LedState;
-import frc.robot.lightstrip.Range;
-import frc.robot.lightstrip.TempLedState;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -36,23 +33,5 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
-  }
-
-  public static final class LightstripConstants {
-    public static int pwmPort = 9;
-    public static int ledCount = 150;
-
-    public static final class Ranges {
-      public static Range intake = new Range(0, 19);
-      public static Range drivetrain = new Range(20, 99);
-      public static Range superstructure = new Range(100, 149);
-      public static Range shooter = new Range(150, 199);
-      public static Range full = new Range(0, ledCount);
-    }
-
-    public static LedState defaultState = new LedState(50, 0, 0, "Fade");
-    public static LedState holdingState = new LedState(0, 0, 55, "Fade");
-    public static TempLedState successSignal = new TempLedState(0, 55, 0, "Fast Blink", 1);
-    public static TempLedState intake = new TempLedState(255, 255, 0, "Solid", 10);
   }
 }
