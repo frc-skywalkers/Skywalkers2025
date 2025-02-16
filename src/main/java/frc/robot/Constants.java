@@ -34,4 +34,18 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final class AlgaeintakeConstants {
+    public static final double intakeVolts = -8.0;
+    public static final double holdVolts = -1.0;
+    public static final double outtakeVolts = 6.0;
+
+    public static final double mm_cruisevel = 3.25;
+    public static final double mm_accel = mm_cruisevel * 4.5;
+    public static final double mm_jerk = mm_accel * 4.0;
+
+    public static final double dropDown = 3.025;
+    public static final double tolerance = 0.05;
+    public static final double downtolerance = 0.085;
+  }
 }
