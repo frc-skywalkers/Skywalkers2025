@@ -41,6 +41,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  //   private final Vision vision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -146,6 +147,27 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
+    // aimController.enableContinuousInput(-Math.PI, Math.PI);
+    // controller
+    //     .y()
+    //     .whileTrue(
+    //         Commands.startRun(
+    //             () -> {
+    //               aimController.reset();
+    //             },
+    //             () -> {
+    //               drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0,
+    // vision.getTargetX(0).getRadians(), drive.getRotation()));
+    //             },
+    //             drive));
+
+    // controller
+    //     .leftBumper()
+    //     .whileTrue(
+    //         DriveCommands.autoAlign(drive, controller, vision.getPrimaryTargetPose(0))
+    //     );
   }
 
   /**
