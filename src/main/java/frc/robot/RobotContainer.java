@@ -23,13 +23,20 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.algaeintake.AlgaeIntake;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIO;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -41,10 +48,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final AlgaeIntake a_intake;
+  private final Elevator elevator;
   //   private final Vision vision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -61,6 +71,8 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
+        a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
         break;
 
       case SIM:
@@ -72,6 +84,8 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
 
       default:
@@ -83,6 +97,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
         break;
     }
 
@@ -105,6 +121,16 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    autoChooser.addOption(
+        "algae characterization",
+        new FeedForwardCharacterization(
+            a_intake, a_intake::runVolts, a_intake::getCharacterizationVelocity));
+
+    autoChooser.addOption(
+        "elevator characterization",
+        new FeedForwardCharacterization(
+            elevator, elevator::runVolts, elevator::getCharacterizationVelocity));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -123,6 +149,10 @@ public class RobotContainer {
             () -> -controller.getLeftY() * 0.5,
             () -> -controller.getLeftX() * 0.5,
             () -> -controller.getRightX() * 0.5));
+
+    // joystick elevator for testing
+    // elevator.setDefaultCommand(Commands.run(() -> {elevator.runVolts(operator.getLeftY() *
+    // 0.1);}, elevator));
 
     // Lock to 0° when A button is held
     controller
@@ -147,6 +177,8 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
