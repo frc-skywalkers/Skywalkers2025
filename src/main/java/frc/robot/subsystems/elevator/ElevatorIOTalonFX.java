@@ -46,12 +46,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     Slot0Configs pidConfigs = config.Slot0;
 
     pidConfigs.GravityType = GravityTypeValue.Elevator_Static;
-    pidConfigs.kS = 0.4345; // check all these values
-    pidConfigs.kG = 0.56;
-    pidConfigs.kP = 30.00;
+    pidConfigs.kS = 0.15; // check all these values
+    pidConfigs.kG = 0.28;
+    pidConfigs.kP = 1.2;
     pidConfigs.kI = 0.00;
-    pidConfigs.kD = 0.00;
-    pidConfigs.kV = 6.25;
+    pidConfigs.kD = 3.0;
+    pidConfigs.kV = 0.12 * ElevatorConstants.GEAR_RATIO; // 0.38731 //2.4
     pidConfigs.kA = 0.045;
 
     MotionMagicConfigs mm_configs = config.MotionMagic;
@@ -113,6 +113,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.currentAmps =
         new double[] {leftCurrent.getValueAsDouble(), rightCurrent.getValueAsDouble()};
     inputs.goalPos = goalPos;
+    System.out.println(mm_volt.getFeedForwardMeasure());
+    System.out.println(mm_volt.getPositionMeasure());
   }
 
   @Override

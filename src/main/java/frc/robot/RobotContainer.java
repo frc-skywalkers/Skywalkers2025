@@ -25,9 +25,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.algaeintake.AlgaeIntake;
-import frc.robot.subsystems.algaeintake.AlgaeIntakeIO;
-import frc.robot.subsystems.algaeintake.AlgaeIntakeIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -48,7 +45,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final AlgaeIntake a_intake;
+  //   private final AlgaeIntake a_intake;
   private final Elevator elevator;
   //   private final Vision vision;
 
@@ -71,7 +68,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
+        // a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
         break;
 
@@ -84,7 +81,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
 
@@ -97,7 +94,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
     }
@@ -121,10 +118,10 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    autoChooser.addOption(
-        "algae characterization",
-        new FeedForwardCharacterization(
-            a_intake, a_intake::runVolts, a_intake::getCharacterizationVelocity));
+    // autoChooser.addOption(
+    //     "algae characterization",
+    //     new FeedForwardCharacterization(
+    //         a_intake, a_intake::runVolts, a_intake::getCharacterizationVelocity));
 
     autoChooser.addOption(
         "elevator characterization",
@@ -151,8 +148,12 @@ public class RobotContainer {
             () -> -controller.getRightX() * 0.5));
 
     // joystick elevator for testing
-    // elevator.setDefaultCommand(Commands.run(() -> {elevator.runVolts(operator.getLeftY() *
-    // 0.1);}, elevator));
+    // elevator.setDefaultCommand(
+    //     Commands.run(
+    //         () -> {
+    //           elevator.runVolts(operator.getLeftY());
+    //         },
+    //         elevator));
 
     // Lock to 0° when A button is held
     controller
@@ -178,7 +179,11 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
+    // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
+
+    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(5)));
+
+    operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
