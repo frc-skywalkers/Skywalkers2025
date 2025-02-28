@@ -59,6 +59,15 @@ public final class Constants {
     public static final double mm_jerk = mm_accel * 4.0;
   }
 
+  public static final class HangConstants {
+    public static final double liftUpVolts = -8.0;
+    public static final double liftDownVolts = 8.0;
+    public static final double holdVolts = -1.0;
+    public static final double tolerance = 0.00;
+    public static final double downtolerance = 0.00;
+    public static final double dropDown = 0.00;
+  }
+
   public static final class CoralIntakeConstants {
     public static final int pivotID = 100; // need to change
     public static final int wheelID = 101;
