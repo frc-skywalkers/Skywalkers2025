@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
+import frc.robot.commands.OperatorCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -181,9 +182,11 @@ public class RobotContainer {
 
     // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
-    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(5)));
+    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(6.63)));
 
     operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
+
+    operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);

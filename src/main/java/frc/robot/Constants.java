@@ -104,7 +104,7 @@ public final class Constants {
 
     public static final double tolerance = 0.07;
 
-    public static final double kTopLimit = 6.5; // radians
+    public static final double kTopLimit = 8.0; // radians
     public static final double kBottomLimit = 0.05; // ?
   }
 }

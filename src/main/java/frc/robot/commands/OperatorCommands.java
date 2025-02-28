@@ -12,6 +12,7 @@ public class OperatorCommands {
     return Commands.run(
             () -> {
               elevator.runVolts(-2.0);
+              elevator.disableSoftLimits();
             },
             elevator)
         .until(() -> elevator.isHomed())
@@ -19,6 +20,8 @@ public class OperatorCommands {
             () -> {
               elevator.resetPosition();
               elevator.stop();
+              elevator.isZeroed = true;
+              elevator.enableSoftLimits();
             },
             elevator);
   }

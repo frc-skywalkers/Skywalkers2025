@@ -48,7 +48,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     pidConfigs.GravityType = GravityTypeValue.Elevator_Static;
     pidConfigs.kS = 0.15; // check all these values
     pidConfigs.kG = 0.28;
-    pidConfigs.kP = 1.2;
+    pidConfigs.kP = 30.0; // 20.0 0.03 rad
     pidConfigs.kI = 0.00;
     pidConfigs.kD = 3.0;
     pidConfigs.kV = 0.12 * ElevatorConstants.GEAR_RATIO; // 0.38731 //2.4
