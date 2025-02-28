@@ -211,6 +211,7 @@ public class Drive extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      // Add vision measurement
     }
 
     // Update gyro alert
@@ -299,8 +300,18 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+  // these are robot relative
   private ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public ChassisSpeeds getFieldRelVelocity() {
+    return new ChassisSpeeds(
+        getChassisSpeeds().vxMetersPerSecond * getRotation().getCos()
+            - getChassisSpeeds().vyMetersPerSecond * getRotation().getSin(),
+        getChassisSpeeds().vyMetersPerSecond * getRotation().getCos()
+            + getChassisSpeeds().vxMetersPerSecond * getRotation().getSin(),
+        getChassisSpeeds().omegaRadiansPerSecond);
   }
 
   /** Returns the position of each module in radians. */
