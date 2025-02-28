@@ -13,6 +13,8 @@ public class AlgaeintakeIOSim implements AlgaeintakeIO {
   private static final double ARM_KP = 0.05;
   private static final double ARM_KD = 0.0;
   private static final double ARM_KS = 0.0;
+  private static final double ARM_KV = 0.0;
+  private static final double ARM_KG = 0.0;
   private final double ARM_MOTOR_INERTIA = 0.004;
   final double ARM_MOTOR_GEAR_RATIO = 2.0;
   private final double WHEEL_MOTOR_INERTIA = 0.004;
@@ -63,14 +65,19 @@ public class AlgaeintakeIOSim implements AlgaeintakeIO {
     } else {
       wheelController.reset();
     }
+  }
 
-    double armMotorVoltage = 12.0; // Example voltage to the intake motor
+  @Override
+  public void setVoltage(double volts) {
+    boolean closedLoop = false;
+    double appliedVolts = volts;
+    armSim.setInputVoltage(appliedVolts);
+  }
 
-    // Apply the voltage to the intake motor simulation
-    armSim.setInput(armMotorVoltage);
+  public void setVelocity(double velocity) {
+    boolean closedLoop = true;
 
-    // Simulate the arm motor's voltage input (for the intake arm)
-    double wheelMotorVoltage = 8.0; // Example voltage to the arm motor
-    wheelSim.setInput(wheelMotorVoltage);
+    ffVolts = ARM_KS * Math.signum(velocity) + ARM_KG * ARM_KV * velocity;
+    armSim.setInput(velocity);
   }
 }
