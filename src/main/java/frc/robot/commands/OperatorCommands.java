@@ -22,19 +22,30 @@ public class OperatorCommands {
               elevator.stop();
               elevator.isZeroed = true;
               elevator.enableSoftLimits();
+              System.out.println("DONE DONE DONE DONE DONE DONE");
             },
             elevator);
   }
 
-  //   public static Command goToPosition(
-  //       Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
-  //     return Commands.run(
-  //             () -> {
-  //               elevator.goToPosition(e_pos);
-  //               a_intake.goToPosition(a_pos);
-  //             },
-  //             elevator,
-  //             a_intake)
-  //         .until(() -> (a_intake.atPosition(a_pos)) && (elevator.atPosition(e_pos)));
-  //   }
+  // public static Command goToPosition(
+  //     Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
+  //   return Commands.run(
+  //           () -> {
+  //             elevator.goToPosition(e_pos);
+  //             a_intake.goToPosition(a_pos);
+  //           },
+  //           elevator,
+  //           a_intake)
+  //       .until(() -> (a_intake.atPosition(a_pos)) && (elevator.atPosition(e_pos)));
+  // }
+
+  public static Command goToPosition(Elevator elevator, double e_pos) {
+    return Commands.run(
+            () -> {
+              elevator.goToPosition(e_pos);
+              System.out.println("went to position" + e_pos);
+            },
+            elevator)
+        .until(() -> elevator.atPosition(e_pos));
+  }
 }

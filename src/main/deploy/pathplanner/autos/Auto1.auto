@@ -7,25 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PathA"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "PathB"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "PathA"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "PathB"
+            "pathName": "Path3"
           }
         }
       ]

@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
   public void goToPosition(double positionRad) {
     if (isZeroed) {
       io.goToPosition(positionRad);
-      System.out.println("going");
+      // System.out.println("going");
     }
   }
 
@@ -72,6 +72,7 @@ public class Elevator extends SubsystemBase {
   public boolean atPosition() {
     boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < ElevatorConstants.tolerance;
     Logger.recordOutput("Elevator/atPosition", ret);
+    System.out.println("FINISHED COMMAND!!!!!");
     return ret;
   }
 

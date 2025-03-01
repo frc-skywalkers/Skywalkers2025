@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -53,6 +54,8 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+
+  public double multiplier = 1;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -99,6 +102,10 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIO() {});
         break;
     }
+
+    NamedCommands.registerCommand("elevator up", OperatorCommands.goToPosition(elevator, 6.63));
+
+    NamedCommands.registerCommand("elevator down", OperatorCommands.goToPosition(elevator, 0));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -179,6 +186,10 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    if (controller.rightBumper().getAsBoolean()) {
+      multiplier = 0.25;
+    }
 
     // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
