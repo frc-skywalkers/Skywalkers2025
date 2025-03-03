@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -98,13 +99,26 @@ public final class Constants {
     public static final double pickupB = 0.0;
     public static final double coralStation = 0.0;
 
-    public static final double mm_cruisevel = 1.5;
+    public static final double mm_cruisevel = 3.5;
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
 
     public static final double tolerance = 0.07;
 
-    public static final double kTopLimit = 8.0; // radians
+    public static final double kTopLimit = 25.0; // radians
     public static final double kBottomLimit = 0.05; // ?
+  }
+
+  public static final class HangConstants {
+    public static final double liftUpVolts = -8.0;
+    public static final double liftDownVolts = 8.0;
+    public static final double holdVolts = -1.0;
+    public static final double tolerance = 0.00;
+    public static final double downtolerance = 0.00;
+    public static final double dropDown = 0.00;
+  }
+
+  public static final class LimelightConstants {
+    public static final double cameraHeight = Units.inchesToMeters(9.85);
   }
 }

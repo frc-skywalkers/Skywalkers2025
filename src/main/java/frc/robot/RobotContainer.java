@@ -37,6 +37,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -54,6 +55,9 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
+
+  private final LoggedNetworkNumber elevator_Pos =
+      new LoggedNetworkNumber("/SmartDashboard/ePos", 6.63);
 
   public double multiplier = 1;
 
@@ -193,7 +197,8 @@ public class RobotContainer {
 
     // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
-    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(6.63)));
+    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(elevator_Pos.get())));
+    System.out.println(elevator_Pos.get());
 
     operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 

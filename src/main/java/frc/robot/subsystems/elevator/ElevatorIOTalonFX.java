@@ -41,7 +41,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     var config = new TalonFXConfiguration();
     config.CurrentLimits.StatorCurrentLimit = 60.0;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    config.MotorOutput.NeutralMode = NeutralModeValue.Brake; // BRAKE
 
     Slot0Configs pidConfigs = config.Slot0;
 
@@ -113,8 +113,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.currentAmps =
         new double[] {leftCurrent.getValueAsDouble(), rightCurrent.getValueAsDouble()};
     inputs.goalPos = goalPos;
-    System.out.println(mm_volt.getFeedForwardMeasure());
-    System.out.println(mm_volt.getPositionMeasure());
+    // System.out.println(mm_volt.getFeedForwardMeasure());
+    // System.out.println(mm_volt.getPositionMeasure());
   }
 
   @Override

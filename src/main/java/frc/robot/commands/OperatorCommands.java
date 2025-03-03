@@ -11,7 +11,7 @@ public class OperatorCommands {
   public static Command zeroElevator(Elevator elevator) {
     return Commands.run(
             () -> {
-              elevator.runVolts(-2.0);
+              elevator.runVolts(-4.0);
               elevator.disableSoftLimits();
             },
             elevator)
