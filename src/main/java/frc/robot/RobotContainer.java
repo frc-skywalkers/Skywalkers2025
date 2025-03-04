@@ -27,6 +27,12 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.OperatorCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.algaeintake.AlgaeIntake;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIO;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIOTalonFX;
+import frc.robot.subsystems.coralintake.CoralIntake;
+import frc.robot.subsystems.coralintake.CoralIntakeIO;
+import frc.robot.subsystems.coralintake.CoralIntakeIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -36,6 +42,9 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.hang.Hang;
+import frc.robot.subsystems.hang.HangIO;
+import frc.robot.subsystems.hang.HangIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -48,8 +57,10 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  //   private final AlgaeIntake a_intake;
+  private final AlgaeIntake a_intake;
+  private final CoralIntake c_intake;
   private final Elevator elevator;
+  private final Hang hang;
   //   private final Vision vision;
 
   // Controller
@@ -76,8 +87,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
+        a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
+        c_intake = new CoralIntake(new CoralIntakeIOTalonFX());
+        hang = new Hang(new HangIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
+
         break;
 
       case SIM:
@@ -89,7 +103,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        c_intake = new CoralIntake(new CoralIntakeIO() {});
+        hang = new Hang(new HangIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
 
@@ -102,14 +118,16 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        c_intake = new CoralIntake(new CoralIntakeIO() {});
+        hang = new Hang(new HangIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
     }
 
-    NamedCommands.registerCommand("elevator up", OperatorCommands.goToPosition(elevator, 6.63));
+    NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
 
-    NamedCommands.registerCommand("elevator down", OperatorCommands.goToPosition(elevator, 0));
+    NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -202,7 +220,7 @@ public class RobotContainer {
 
     operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
-    operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
+    // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);

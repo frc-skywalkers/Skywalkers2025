@@ -82,6 +82,8 @@ public final class Constants {
     public static final double mm_cruisevel = 3.25;
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
+
+    public static final int encoderID = 300;
   }
 
   public static final class ElevatorConstants {
@@ -107,15 +109,24 @@ public final class Constants {
 
     public static final double kTopLimit = 25.0; // radians
     public static final double kBottomLimit = 0.05; // ?
+    public static final int encoderID = 100; // change this number wheehoo
   }
 
   public static final class HangConstants {
+    public static final double GEAR_RATIO = 225.0;
     public static final double liftUpVolts = -8.0;
     public static final double liftDownVolts = 8.0;
     public static final double holdVolts = -1.0;
-    public static final double tolerance = 0.00;
+    public static final double tolerance = 0.05;
     public static final double downtolerance = 0.00;
     public static final double dropDown = 0.00;
+
+    public static final double mm_cruisevel = 0.4;
+    public static final double mm_accel = mm_cruisevel * 10.0;
+    public static final double mm_jerk = mm_accel * 10.0;
+
+    public static final int hangID = 22;
+    public static final int encoderID = 200;
   }
 
   public static final class LimelightConstants {

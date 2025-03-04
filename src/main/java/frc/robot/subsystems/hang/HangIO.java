@@ -9,6 +9,8 @@ public interface HangIO {
     public double velocityRadPerSec = 0.0;
     public double appliedVolts = 0.0;
     public double currentAmps = 0.0;
+    public double positionRad = 0.0;
+    public double goalPos = 0.0;
   }
 
   /* updates set of loggable inputs */
@@ -19,6 +21,8 @@ public interface HangIO {
 
   /* stops in open loop */
   public default void stop() {}
+
+  public default void goToPosition(double positionRad) {}
 
   public default void resetPosition() {} // resetting encoder reading
 }

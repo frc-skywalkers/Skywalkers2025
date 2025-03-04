@@ -3,6 +3,7 @@ package frc.robot.subsystems.elevator;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -10,6 +11,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -19,12 +21,15 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ElevatorConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
   private double goalPos = 0.0;
 
   private final TalonFX leftElevator = new TalonFX(ElevatorConstants.leftElevatorID);
   private final TalonFX rightElevator = new TalonFX(ElevatorConstants.rightElevatorID);
+
+  private final CANcoder cancoder = new CANcoder(ElevatorConstants.encoderID);
 
   private final StatusSignal<Angle> leftPosition = leftElevator.getPosition();
   private final StatusSignal<Angle> rightPosition = rightElevator.getPosition();
@@ -34,6 +39,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   private final StatusSignal<Voltage> appliedVolts = leftElevator.getMotorVoltage();
   private final StatusSignal<Current> leftCurrent = leftElevator.getTorqueCurrent();
   private final StatusSignal<Current> rightCurrent = rightElevator.getTorqueCurrent();
+
+  private final StatusSignal<Angle> absEncoderPos = cancoder.getAbsolutePosition();
+
+  private double initialAbs = 0.0;
+  private final double absEncoderOffset = 0.0; // FIND THIS VALUE!!!!!!!!!!!!!
+  private double outputOffset = 0.0;
 
   private final MotionMagicVoltage mm_volt = new MotionMagicVoltage(0.0);
 
@@ -80,6 +91,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
       System.out.println("Real Error, Could not configure device. Error: " + status.toString());
     }
 
+    cancoder.getConfigurator().apply(new CANcoderConfiguration());
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         250.0,
         leftPosition,
@@ -94,6 +107,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     leftElevator.setPosition(0.0);
     rightElevator.setPosition(0.0);
+
+    // leftElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); //this one fr
+    // rightElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset);
+    initialAbs = absEncoderPos.getValueAsDouble();
+    outputOffset = initialAbs - absEncoderOffset;
+
     rightElevator.setControl(new Follower(ElevatorConstants.leftElevatorID, false));
   }
 
@@ -115,6 +134,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.goalPos = goalPos;
     // System.out.println(mm_volt.getFeedForwardMeasure());
     // System.out.println(mm_volt.getPositionMeasure());
+
+    Logger.recordOutput("Elevator/initialAbs", initialAbs);
+    Logger.recordOutput("Elevator/outputOffset", outputOffset);
   }
 
   @Override
