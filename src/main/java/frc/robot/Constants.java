@@ -37,7 +37,7 @@ public final class Constants {
   }
 
   public static final class AlgaeIntakeConstants {
-    public static final int pivotID = 23; // change
+    public static final int pivotID = 54; // change
     public static final int wheelID = 55;
 
     public static final double GEAR_RATIO = 3.0 * 4.0; // check this one
@@ -61,8 +61,8 @@ public final class Constants {
   }
 
   public static final class CoralIntakeConstants {
-    public static final int pivotID = 100; // need to change
-    public static final int wheelID = 101;
+    public static final int pivotID = 40;
+    public static final int wheelID = 101; // need to change
 
     public static final double GEAR_RATIO = 3.0 * 4.0;
 
@@ -87,7 +87,7 @@ public final class Constants {
   }
 
   public static final class ElevatorConstants {
-    public static final int leftElevatorID = 0; // check
+    public static final int leftElevatorID = 60; // check
     public static final int rightElevatorID = 61;
 
     public static final double GEAR_RATIO = 20.0;
@@ -109,7 +109,7 @@ public final class Constants {
 
     public static final double kTopLimit = 25.0; // radians
     public static final double kBottomLimit = 0.05; // ?
-    public static final int encoderID = 100; // change this number wheehoo
+    public static final int encoderID = 62; // change this number wheehoo
   }
 
   public static final class HangConstants {
@@ -121,12 +121,12 @@ public final class Constants {
     public static final double downtolerance = 0.00;
     public static final double dropDown = 0.00;
 
-    public static final double mm_cruisevel = 0.4;
+    public static final double mm_cruisevel = 0.2;
     public static final double mm_accel = mm_cruisevel * 10.0;
     public static final double mm_jerk = mm_accel * 10.0;
 
-    public static final int hangID = 22;
-    public static final int encoderID = 200;
+    public static final int hangID = 20;
+    public static final int encoderID = 21;
   }
 
   public static final class LimelightConstants {

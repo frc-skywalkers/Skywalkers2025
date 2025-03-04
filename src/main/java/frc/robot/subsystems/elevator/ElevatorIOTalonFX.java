@@ -43,7 +43,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   private final StatusSignal<Angle> absEncoderPos = cancoder.getAbsolutePosition();
 
   private double initialAbs = 0.0;
-  private final double absEncoderOffset = 0.0; // FIND THIS VALUE!!!!!!!!!!!!!
+  private final double absEncoderOffset = 0.3645; // FIND THIS VALUE!!!!!!!!!!!!!
   private double outputOffset = 0.0;
 
   private final MotionMagicVoltage mm_volt = new MotionMagicVoltage(0.0);
@@ -101,16 +101,19 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         rightVelocity,
         appliedVolts,
         leftCurrent,
-        rightCurrent);
+        rightCurrent,
+        absEncoderPos);
     leftElevator.optimizeBusUtilization();
     rightElevator.optimizeBusUtilization();
 
-    leftElevator.setPosition(0.0);
-    rightElevator.setPosition(0.0);
+    // leftElevator.setPosition(0.0);
+    // rightElevator.setPosition(0.0);
 
-    // leftElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); //this one fr
-    // rightElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset);
+    leftElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); // this one fr
+    rightElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset);
+
     initialAbs = absEncoderPos.getValueAsDouble();
+    Logger.recordOutput("Elevator/initialAbs1", initialAbs);
     outputOffset = initialAbs - absEncoderOffset;
 
     rightElevator.setControl(new Follower(ElevatorConstants.leftElevatorID, false));
@@ -125,7 +128,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         rightVelocity,
         appliedVolts,
         leftCurrent,
-        rightCurrent);
+        rightCurrent,
+        absEncoderPos);
     inputs.positionRad = Units.rotationsToRadians(leftPosition.getValueAsDouble());
     inputs.velocityRadPerSec = Units.rotationsToRadians(leftVelocity.getValueAsDouble());
     inputs.appliedVolts = Units.rotationsToRadians(appliedVolts.getValueAsDouble());
@@ -137,6 +141,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     Logger.recordOutput("Elevator/initialAbs", initialAbs);
     Logger.recordOutput("Elevator/outputOffset", outputOffset);
+    Logger.recordOutput("Elevator/absEncoder", absEncoderPos.getValueAsDouble());
   }
 
   @Override

@@ -177,13 +177,13 @@ public class RobotContainer {
             () -> -controller.getLeftX() * 0.5,
             () -> -controller.getRightX() * 0.5));
 
-    // joystick elevator for testing
-    // elevator.setDefaultCommand(
+    // joystick hang for testing
+    // hang.setDefaultCommand(
     //     Commands.run(
     //         () -> {
-    //           elevator.runVolts(operator.getLeftY());
+    //           hang.runVolts(operator.getLeftY());
     //         },
-    //         elevator));
+    //         hang));
 
     // Lock to 0° when A button is held
     controller
@@ -215,10 +215,19 @@ public class RobotContainer {
 
     // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
-    operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(elevator_Pos.get())));
-    System.out.println(elevator_Pos.get());
+    // operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(elevator_Pos.get())));
+    // System.out.println(elevator_Pos.get());
 
-    operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
+    // operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(22.0)));
+    // operator.y().onTrue(Commands.runOnce(() -> elevator.goToPosition(15.0)));
+    // operator.a().onTrue(Commands.runOnce(() -> elevator.goToPosition(8.0)));
+
+    // operator.b().onTrue(Commands.runOnce(() -> hang.goToPosition(-21.0)));
+
+    operator.x().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(6.0)));
+    operator.y().onTrue(Commands.runOnce(() -> a_intake.goToPosition(-0.6)));
+
+    // operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
     // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
 

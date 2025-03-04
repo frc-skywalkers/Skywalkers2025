@@ -10,7 +10,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -51,10 +50,10 @@ public class AlgaeIntakeIOTalonFX implements AlgaeIntakeIO {
     Slot0Configs pidConfigs = pivotConfig.Slot0;
 
     // needs to be changed
-    pidConfigs.GravityType = GravityTypeValue.Arm_Cosine;
+    // pidConfigs.GravityType = GravityTypeValue.Arm_Cosine;
     pidConfigs.kS = 0.1;
-    pidConfigs.kG = 0.2;
-    pidConfigs.kP = 7.0;
+    // pidConfigs.kG = 0.2;
+    pidConfigs.kP = 10.0;
     pidConfigs.kI = 0.0;
     pidConfigs.kD = 0.06;
     pidConfigs.kV = 0.12 * AlgaeIntakeConstants.GEAR_RATIO;
