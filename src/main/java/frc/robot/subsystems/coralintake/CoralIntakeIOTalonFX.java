@@ -63,8 +63,8 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
 
     // needs to be changed
     pidConfigs.GravityType = GravityTypeValue.Arm_Cosine;
-    pidConfigs.kS = 0.1;
-    pidConfigs.kG = 0.2;
+    pidConfigs.kS = 1.5;
+    pidConfigs.kG = 2.0;
     pidConfigs.kP = 7.0;
     pidConfigs.kI = 0.0;
     pidConfigs.kD = 0.06;

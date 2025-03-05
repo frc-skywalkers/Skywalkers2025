@@ -7,25 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ForwardPath"
+            "pathName": "Slow Path"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "elevator up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BackwardPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "elevator down"
           }
         }
       ]

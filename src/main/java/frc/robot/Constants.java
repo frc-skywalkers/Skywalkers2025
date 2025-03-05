@@ -52,10 +52,10 @@ public final class Constants {
     public static final double holdVolts = 1.0;
     public static final double outtakeVolts = -6.0;
 
-    public static final double tolerance = 0.05;
+    public static final double tolerance = 0.1;
     public static final double downtolerance = 0.085;
 
-    public static final double mm_cruisevel = 3.25;
+    public static final double mm_cruisevel = 0.5; // 3.25
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
   }
@@ -105,7 +105,7 @@ public final class Constants {
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
 
-    public static final double tolerance = 0.07;
+    public static final double tolerance = 0.02;
 
     public static final double kTopLimit = 25.0; // radians
     public static final double kBottomLimit = 0.05; // ?

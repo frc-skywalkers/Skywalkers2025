@@ -21,6 +21,8 @@ public class AlgaeIntake extends SubsystemBase {
     Logger.processInputs("AlgaeIntake", inputs);
 
     Logger.recordOutput("AlgaeIntake/hasPiece", hasPiece());
+
+    System.out.println(Math.abs(getPositionRad() - inputs.goalPos));
   }
 
   public void runVolts(double volts) {
@@ -78,14 +80,22 @@ public class AlgaeIntake extends SubsystemBase {
     return inputs.currentAmps[1] > (35.0); // check sign + amps number
   }
 
-  public boolean atPosition() {
-    boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < AlgaeIntakeConstants.tolerance;
-    Logger.recordOutput("AlgaeIntake/atPosition", ret);
-    return ret;
-  }
+  // public boolean atPosition() {
+  //   boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < AlgaeIntakeConstants.tolerance;
+  //   Logger.recordOutput("AlgaeIntake/atPosition", ret);
+  //   if (ret) {
+  //     System.out.println("REACHED POSITION!!!");
+  //   }
+  //   return ret;
+  // }
 
   public boolean atPosition(double pos) {
-    return Math.abs(getPositionRad() - pos) < AlgaeIntakeConstants.tolerance;
+    boolean ret = Math.abs(getPositionRad() - pos) < AlgaeIntakeConstants.tolerance;
+    Logger.recordOutput("AlgaeIntake/atPosition", ret);
+    if (ret) {
+      System.out.println("REACHED POSITION!!!");
+    }
+    return ret;
   }
 
   public boolean isHomed() {

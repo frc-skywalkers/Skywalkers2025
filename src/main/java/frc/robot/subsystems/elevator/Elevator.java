@@ -15,6 +15,8 @@ public class Elevator extends SubsystemBase {
 
   public Elevator(ElevatorIO io) {
     this.io = io;
+
+    Logger.recordOutput("Elevator/atPosition", false);
   }
 
   @Override
@@ -22,6 +24,8 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
 
+    Logger.recordOutput("Elevator/isHomed", isHomed());
+    ;
     // soft limits
     // Logger.recordOutput("Elevator/softLimitsEnabled", softLimitsEnabled);
     // Logger.recordOutput("Elevator/isZeroed", isZeroed);
@@ -69,19 +73,21 @@ public class Elevator extends SubsystemBase {
     return inputs.velocityRadPerSec;
   }
 
-  public boolean atPosition() {
-    boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < ElevatorConstants.tolerance;
+  // public boolean atPosition() {
+  //   boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < ElevatorConstants.tolerance;
+  //   Logger.recordOutput("Elevator/atPosition", ret);
+  //   System.out.println("FINISHED COMMAND!!!!!");
+  //   return ret;
+  // }
+
+  public boolean atPosition(double pos) {
+    boolean ret = Math.abs(getPositionRad() - pos) < ElevatorConstants.tolerance;
     Logger.recordOutput("Elevator/atPosition", ret);
-    System.out.println("FINISHED COMMAND!!!!!");
     return ret;
   }
 
-  public boolean atPosition(double pos) {
-    return Math.abs(getPositionRad() - pos) < ElevatorConstants.tolerance;
-  }
-
   public boolean isHomed() {
-    return inputs.currentAmps[0] < -18.0; // check
+    return inputs.currentAmps[0] < -20.0; // check, was -18
   }
 
   // public void enableSoftLimits() {

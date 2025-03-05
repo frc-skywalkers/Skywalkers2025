@@ -10,36 +10,76 @@ import frc.robot.subsystems.hang.Hang;
 public class OperatorCommands {
   private OperatorCommands() {}
 
-  // public static Command zeroElevator(Elevator elevator) {
-  //   return Commands.run(
-  //           () -> {
-  //             elevator.runVolts(-4.0);
-  //             elevator.disableSoftLimits();
-  //           },
-  //           elevator)
-  //       .until(() -> elevator.isHomed())
-  //       .andThen(
-  //           () -> {
-  //             elevator.resetPosition();
-  //             elevator.stop();
-  //             elevator.isZeroed = true;
-  //             elevator.enableSoftLimits();
-  //             System.out.println("DONE DONE DONE DONE DONE DONE");
-  //           },
-  //           elevator);
-  // }
+  public static Command zeroElevator(Elevator elevator) {
+    return Commands.run(
+            () -> {
+              elevator.runVolts(-4.0); // was -2
+            },
+            elevator)
+        .until(() -> elevator.isHomed())
+        .andThen(
+            () -> {
+              elevator.resetPosition();
+              elevator.stop();
+              System.out.println("DONE DONE DONE DONE DONE DONE");
+            },
+            elevator);
+  }
 
-  // public static Command goToPosition(
-  //     Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
+  // public static Command goToPreset(
+  //     Elevator elevator, CoralIntake c_intake, double e_pos, double c_pos) {
   //   return Commands.run(
   //           () -> {
   //             elevator.goToPosition(e_pos);
-  //             a_intake.goToPosition(a_pos);
+  //             c_intake.goToPosition(c_pos);
   //           },
   //           elevator,
-  //           a_intake)
-  //       .until(() -> (a_intake.atPosition(a_pos)) && (elevator.atPosition(e_pos)));
+  //           c_intake)
+  //       .until(() -> (c_intake.atPosition(c_pos)) && (elevator.atPosition(e_pos)));
   // }
+
+  public static Command goToPreset(
+      Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
+    return Commands.run(
+            () -> {
+              elevator.goToPosition(e_pos);
+              a_intake.goToPosition(a_pos);
+            },
+            elevator,
+            a_intake)
+        .until(() -> (a_intake.atPosition(a_pos)) && (elevator.atPosition(e_pos)));
+  }
+
+  // public static Command testAndThen(Elevator elevator, CoralIntake c_intake, double e_pos, double
+  // c_pos) {
+  //   return Commands.run(() -> {c_intake.goToPosition(c_pos);}, c_intake).andThen(() ->
+  // {elevator.goToPosition(e_pos);}, elevator);
+  // }
+
+  public static Command testAndThen(
+      Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
+    return Commands.run(
+            () -> {
+              a_intake.goToPosition(a_pos);
+            },
+            a_intake)
+        .withTimeout(1.5)
+        .andThen(
+            () -> {
+              elevator.goToPosition(e_pos);
+            },
+            elevator)
+        .until(() -> (a_intake.atPosition(a_pos) && elevator.atPosition(e_pos)));
+
+    // .until(() -> elevator.atPosition(e_pos))
+    // .andThen(
+    //     () -> {
+    //       elevator.stop();
+    //       a_intake.stop();
+    //     },
+    //     elevator,
+    //     a_intake);
+  }
 
   public static Command moveElevator(Elevator elevator, double e_pos) {
     return Commands.run(

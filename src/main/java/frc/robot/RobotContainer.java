@@ -129,6 +129,12 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
 
+    NamedCommands.registerCommand(
+        "algae pivot out", OperatorCommands.moveAlgae(a_intake, -1.0)); // check value
+
+    NamedCommands.registerCommand(
+        "coral pivot down", OperatorCommands.moveCoral(c_intake, 0.0)); // check value
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -173,9 +179,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY() * 0.5,
-            () -> -controller.getLeftX() * 0.5,
-            () -> -controller.getRightX() * 0.5));
+            () -> -controller.getLeftY() * 0.25,
+            () -> -controller.getLeftX() * 0.25,
+            () -> -controller.getRightX() * 0.25));
 
     // joystick hang for testing
     // hang.setDefaultCommand(
@@ -225,11 +231,15 @@ public class RobotContainer {
     // operator.b().onTrue(Commands.runOnce(() -> hang.goToPosition(-21.0)));
 
     operator.x().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(6.0)));
-    operator.y().onTrue(Commands.runOnce(() -> a_intake.goToPosition(-0.6)));
+    operator.y().onTrue(Commands.runOnce(() -> a_intake.goToPosition(-1.0)));
 
     // operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
     // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
+
+    operator.a().onTrue(OperatorCommands.testAndThen(elevator, a_intake, 22.0, -1.0)); // NEED TO
+    operator.b().onTrue(OperatorCommands.testAndThen(elevator, a_intake, 8.0, -0.5));
+    // CHANGE CORAL POSITION TO "DOWN" POSITION
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);

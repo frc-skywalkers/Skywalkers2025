@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "coral pivot down"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "ForwardPath"
+            "pathName": "1A"
           }
         },
         {
@@ -19,13 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BackwardPath"
+            "pathName": "AG"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "elevator down"
+            "pathName": "GF"
           }
         }
       ]
