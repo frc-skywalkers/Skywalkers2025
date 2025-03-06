@@ -22,12 +22,15 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -296,56 +299,50 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  // public static Command autoAlignReef(Drive drive, XboxController joystick, LimelightHelpers
-  // limelightHelpers, double targetXDist, double targetYDist, double targetR) { //target R should
-  // be with RZ, and limelight angle
-  //   ProfiledPIDController headingController =
-  //       new ProfiledPIDController(
-  //           3.0,
-  //           0.0,
-  //           0.05,
-  //           new Constraints(
-  //               drive.getMaxAngularSpeedRadPerSec(), drive.getMaxAngularSpeedRadPerSec()));
-  //   ProfiledPIDController xController =
-  //       new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
-  //   ProfiledPIDController yController =
-  //       new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
-  //   headingController.reset(
-  //       drive.getPose().getRotation().getRadians(),
-  //       drive.getFieldRelVelocity().omegaRadiansPerSecond);
-  //   xController.reset(drive.getPose().getX(), drive.getFieldRelVelocity().vxMetersPerSecond);
-  //   yController.reset(drive.getPose().getY(), drive.getFieldRelVelocity().vyMetersPerSecond);
-  //   headingController.enableContinuousInput(-Math.PI, Math.PI);
+  public static Command autoAlignReef(
+      Drive drive, CommandXboxController joystick, double goalX, double goalY, double goalRad) {
 
-  //   double currentXAngle = LimelightHelpers.getTY("limelight");
-  //   double currentYAngle = LimelightHelpers.getTX("limelight");
+    int tagID =
+        (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
 
-  //   double currentXDistance = (Units.inchesToMeters(12) -
-  // LimelightConstants.cameraHeight)/Math.tan(currentXAngle*Math.PI/180);
-  //   double currentYDistance = Math.tan(currentYAngle*Math.PI/180) * currentXDistance;
+    ProfiledPIDController headingController =
+        new ProfiledPIDController(
+            3.0,
+            0.0,
+            0.05,
+            new Constraints(
+                drive.getMaxAngularSpeedRadPerSec(), drive.getMaxAngularSpeedRadPerSec()));
+    ProfiledPIDController xController =
+        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+    ProfiledPIDController yController =
+        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+    headingController.reset(
+        drive.getPose().getRotation().getRadians(),
+        drive.getFieldRelVelocity().omegaRadiansPerSecond);
+    xController.reset(drive.getPose().getX(), drive.getFieldRelVelocity().vxMetersPerSecond);
+    yController.reset(drive.getPose().getY(), drive.getFieldRelVelocity().vyMetersPerSecond);
 
-  //   //you want it to be ROBOT relative !!!!
-  //   return Commands.run(
-  //           () -> {
-  //             double omegaOutput =
-  //                 headingController.calculate(
-  //                     drive.getPose().getRotation().getRadians(),
-  // goal.getRotation().getRadians());
-  //             double xOutput = xController.calculate(drive.getPose().getX(), goal.getX());
-  //             double yOutput = yController.calculate(drive.getPose().getY(), goal.getY());
-  //             double omegaSetpoint = headingController.getSetpoint().velocity;
-  //             double xSetpoint = xController.getSetpoint().velocity;
-  //             double ySetpoint = yController.getSetpoint().velocity;
-  //             drive.runVelocity(
-  //                 ChassisSpeeds.fromFieldRelativeSpeeds(
-  //                     xOutput + xSetpoint,
-  //                     yOutput + ySetpoint,
-  //                     omegaOutput + omegaSetpoint,
-  //                     drive.getRotation()));
-  //           },
-  //           drive)
-  //       .until();
-  // }
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+    return Commands.run(
+            () -> {
+              double omegaOutput =
+                  headingController.calculate(drive.getPose().getRotation().getRadians(), goalRad);
+              double xOutput = xController.calculate(drive.getPose().getX(), goalX);
+              double yOutput = yController.calculate(drive.getPose().getY(), goalY);
+              double omegaSetpoint = headingController.getSetpoint().velocity;
+              double xSetpoint = xController.getSetpoint().velocity;
+              double ySetpoint = yController.getSetpoint().velocity;
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      xOutput + xSetpoint,
+                      yOutput + ySetpoint,
+                      omegaOutput + omegaSetpoint,
+                      drive.getRotation()));
+            },
+            drive)
+        .until(() -> joystick.rightBumper().getAsBoolean());
+  }
 
   // public static Command alignReef() {
   // }

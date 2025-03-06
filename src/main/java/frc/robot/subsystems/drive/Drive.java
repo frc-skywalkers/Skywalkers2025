@@ -27,6 +27,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,15 +40,18 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -103,8 +107,21 @@ public class Drive extends SubsystemBase {
         new SwerveModulePosition(),
         new SwerveModulePosition()
       };
+
+  // private SwerveDrivePoseEstimator poseEstimator =
+  //     new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new
+  // Pose2d());
+  // //no vis version
+
   private SwerveDrivePoseEstimator poseEstimator =
-      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+      new SwerveDrivePoseEstimator(
+          kinematics,
+          rawGyroRotation,
+          lastModulePositions,
+          new Pose2d(),
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(30)));
+  // state standard devs, then vision standard devs
 
   public Drive(
       GyroIO gyroIO,
@@ -210,8 +227,39 @@ public class Drive extends SubsystemBase {
       }
 
       // Apply update
-      poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      poseEstimator.update(rawGyroRotation, modulePositions);
+
+      boolean doRejectUpdate = false;
+      LimelightHelpers.SetRobotOrientation(
+          "limelight",
+          poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+          0,
+          0,
+          0,
+          0,
+          0);
+      LimelightHelpers.PoseEstimate mtestimate =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
+        doRejectUpdate = true;
+      }
+      if (mtestimate.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+      if (!doRejectUpdate) {
+        poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
+      }
+
+      SmartDashboard.putNumber("estimatedX", getPose().getX());
+      SmartDashboard.putNumber("estimatedY", getPose().getY());
+      SmartDashboard.putNumber("estimatedRDegrees", getPose().getRotation().getDegrees());
+
+      SmartDashboard.putNumber("visionX", mtestimate.pose.getX());
+      SmartDashboard.putNumber("visionY", mtestimate.pose.getY());
+      SmartDashboard.putNumber("visionRDegrees", mtestimate.pose.getRotation().getDegrees());
+
       // Add vision measurement
+
     }
 
     // Update gyro alert
