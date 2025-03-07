@@ -2,8 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.CoralIntakeConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.algaeintake.AlgaeIntake;
 import frc.robot.subsystems.coralintake.CoralIntake;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.hang.Hang;
 
@@ -117,4 +121,71 @@ public class OperatorCommands {
             coral)
         .until(() -> coral.atPosition(c_pos));
   }
+
+  // fr commands to run during the game
+
+  public static Command outtakeL1(
+      Elevator elevator, CoralIntake coral, Drive drive, CommandXboxController joystick) {
+    return DriveCommands.alignOther(drive, joystick) //need center alignment for L1
+        .andThen(
+            () -> {
+              elevator.goToPosition(ElevatorConstants.level1);
+              coral.goToPosition(CoralIntakeConstants.level1);
+            },
+            elevator,
+            coral)
+        .until(
+            () ->
+                (coral.atPosition(CoralIntakeConstants.level1)
+                    && elevator.atPosition(ElevatorConstants.level1)));
+  }
+
+  public static Command outtakeL2(
+      Elevator elevator, CoralIntake coral, Drive drive, CommandXboxController joystick) {
+    return DriveCommands.alignReef(drive, joystick)
+        .andThen(
+            () -> {
+              elevator.goToPosition(ElevatorConstants.level2);
+              coral.goToPosition(CoralIntakeConstants.level2);
+            },
+            elevator,
+            coral)
+        .until(
+            () ->
+                (coral.atPosition(CoralIntakeConstants.level2)
+                    && elevator.atPosition(ElevatorConstants.level2)));
+  }
+
+  public static Command outtakeL3(
+      Elevator elevator, CoralIntake coral, Drive drive, CommandXboxController joystick) {
+    return DriveCommands.alignReef(drive, joystick)
+        .andThen(
+            () -> {
+              elevator.goToPosition(ElevatorConstants.level3);
+              coral.goToPosition(CoralIntakeConstants.level3);
+            },
+            elevator,
+            coral)
+        .until(
+            () ->
+                (coral.atPosition(CoralIntakeConstants.level3)
+                    && elevator.atPosition(ElevatorConstants.level3)));
+  }
+
+  public static Command outtakeL4(
+      Elevator elevator, CoralIntake coral, Drive drive, CommandXboxController joystick) {
+    return DriveCommands.alignReef(drive, joystick)
+        .andThen(
+            () -> {
+              elevator.goToPosition(ElevatorConstants.level4);
+              coral.goToPosition(CoralIntakeConstants.level4);
+            },
+            elevator,
+            coral)
+        .until(
+            () ->
+                (coral.atPosition(CoralIntakeConstants.level4)
+                    && elevator.atPosition(ElevatorConstants.level4)));
+  }
+
 }

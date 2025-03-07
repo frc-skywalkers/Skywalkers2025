@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -129,7 +131,87 @@ public final class Constants {
     public static final int encoderID = 21;
   }
 
-  public static final class LimelightConstants {
+  public static final class VisionConstants {
     public static final double cameraHeight = Units.inchesToMeters(9.85);
+
+    public static Pose2d[] leftReefPoses = {
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      new Pose2d(
+          13.686, 2.494, new Rotation2d(Units.degreesToRadians(120))), // IDs 6-11 on red reef
+      new Pose2d(14.709, 3.848, new Rotation2d(Units.degreesToRadians(180))),
+      new Pose2d(14.028, 5.325, new Rotation2d(Units.degreesToRadians(240))),
+      new Pose2d(12.398, 5.525, new Rotation2d(Units.degreesToRadians(300))),
+      new Pose2d(11.451, 4.171, new Rotation2d(Units.degreesToRadians(0))),
+      new Pose2d(12.112, 2.698, new Rotation2d(Units.degreesToRadians(60))),
+      null,
+      null,
+      null,
+      null,
+      null,
+      new Pose2d(
+          3.538, 2.704, new Rotation2d(Units.degreesToRadians(60))), // IDs 17-22 on blue reef
+      new Pose2d(2.848, 4.187, new Rotation2d(Units.degreesToRadians(0))),
+      new Pose2d(3.858, 5.540, new Rotation2d(Units.degreesToRadians(300))),
+      new Pose2d(5.470, 5.325, new Rotation2d(Units.degreesToRadians(240))),
+      new Pose2d(6.100, 3.862, new Rotation2d(Units.degreesToRadians(180))),
+      new Pose2d(5.156, 2.564, new Rotation2d(Units.degreesToRadians(120))),
+    };
+
+    public static Pose2d[] rightReefPoses = {
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      new Pose2d(
+          14.025, 2.687, new Rotation2d(Units.degreesToRadians(120))), // IDs 6-11 on red reef
+      new Pose2d(14.701, 4.201, new Rotation2d(Units.degreesToRadians(180))),
+      new Pose2d(13.711, 5.545, new Rotation2d(Units.degreesToRadians(240))),
+      new Pose2d(12.113, 5.358, new Rotation2d(Units.degreesToRadians(300))),
+      new Pose2d(11.420, 3.858, new Rotation2d(Units.degreesToRadians(0))),
+      new Pose2d(12.386, 2.527, new Rotation2d(Units.degreesToRadians(60))),
+      null,
+      null,
+      null,
+      null,
+      null,
+      new Pose2d(
+          3.809, 2.520, new Rotation2d(Units.degreesToRadians(60))), // IDs 17-22 on blue reef
+      new Pose2d(2.843, 3.867, new Rotation2d(Units.degreesToRadians(0))),
+      new Pose2d(3.523, 5.351, new Rotation2d(Units.degreesToRadians(300))),
+      new Pose2d(5.171, 5.520, new Rotation2d(Units.degreesToRadians(240))),
+      new Pose2d(6.127, 4.190, new Rotation2d(Units.degreesToRadians(180))),
+      new Pose2d(5.456, 2.690, new Rotation2d(Units.degreesToRadians(120))),
+    };
+
+    public static Pose2d[] otherPoses = {
+      null,
+      new Pose2d(
+          16.089, 1.018, new Rotation2d(Units.degreesToRadians(305.818))), // ID 1 coral station
+      new Pose2d(
+          16.399, 7.036, new Rotation2d(Units.degreesToRadians(54.851))), // ID 2 coral station
+      new Pose2d(11.540, 7.457, new Rotation2d(Units.degreesToRadians(90))), // ID 3 processor
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      new Pose2d(
+          1.309, 0.895, new Rotation2d(Units.degreesToRadians(233.991))), // ID 12 coral station
+      new Pose2d(
+          1.175, 7.031, new Rotation2d(Units.degreesToRadians(125.476))), // ID 13 coral station
+      null,
+      null,
+      new Pose2d(5.969, 0.638, new Rotation2d(Units.degreesToRadians(270.0))) // ID 16 processor
+    };
   }
 }
