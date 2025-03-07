@@ -75,7 +75,7 @@ public class CoralIntake extends SubsystemBase {
 
   public boolean hasPiece() {
     // if (Constants.currentMode == Mode.SIM) return true;
-    return inputs.currentAmps[1] > (35.0); // check sign + amps number
+    return inputs.currentAmps[1] > (45.0); // check sign + amps number
   }
 
   public boolean atPosition() {

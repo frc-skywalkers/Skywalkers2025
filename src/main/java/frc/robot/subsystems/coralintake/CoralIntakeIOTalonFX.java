@@ -63,9 +63,9 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
 
     // needs to be changed
     pidConfigs.GravityType = GravityTypeValue.Arm_Cosine;
-    pidConfigs.kS = 1.5;
-    pidConfigs.kG = 2.0;
-    pidConfigs.kP = 7.0;
+    pidConfigs.kS = 0.1;
+    pidConfigs.kG = 0.0; // 0.0
+    pidConfigs.kP = 25.0;
     pidConfigs.kI = 0.0;
     pidConfigs.kD = 0.06;
     pidConfigs.kV = 0.12 * CoralIntakeConstants.GEAR_RATIO;
@@ -108,8 +108,9 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
         250.0, wheelVelocity, wheelAppliedVolts, wheelCurrent);
     wheel.optimizeBusUtilization();
 
-    pivot.setPosition(
-        0.0); // the starting position is zeroed - need to make sure we start at same spot each
+    pivot.setPosition(0); // so that 0 is horizontal
+
+    // the starting position is zeroed - need to make sure we start at same spot each
 
     // pivot.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); //this one fr
     initialAbs = absEncoderPos.getValueAsDouble();

@@ -51,7 +51,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-import frc.robot.LimelightHelpers;
+// import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -229,34 +229,34 @@ public class Drive extends SubsystemBase {
       // Apply update
       poseEstimator.update(rawGyroRotation, modulePositions);
 
-      boolean doRejectUpdate = false;
-      LimelightHelpers.SetRobotOrientation(
-          "limelight",
-          poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
-          0,
-          0,
-          0,
-          0,
-          0);
-      LimelightHelpers.PoseEstimate mtestimate =
-          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
-        doRejectUpdate = true;
-      }
-      if (mtestimate.tagCount == 0) {
-        doRejectUpdate = true;
-      }
-      if (!doRejectUpdate) {
-        poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
-      }
+      // boolean doRejectUpdate = false;
+      // LimelightHelpers.SetRobotOrientation(
+      //     "limelight",
+      //     poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+      //     0,
+      //     0,
+      //     0,
+      //     0,
+      //     0);
+      // LimelightHelpers.PoseEstimate mtestimate =
+      //     LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      // if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
+      //   doRejectUpdate = true;
+      // }
+      // if (mtestimate.tagCount == 0) {
+      //   doRejectUpdate = true;
+      // }
+      // if (!doRejectUpdate) {
+      //   poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
+      // }
 
       SmartDashboard.putNumber("estimatedX", getPose().getX());
       SmartDashboard.putNumber("estimatedY", getPose().getY());
       SmartDashboard.putNumber("estimatedRDegrees", getPose().getRotation().getDegrees());
 
-      SmartDashboard.putNumber("visionX", mtestimate.pose.getX());
-      SmartDashboard.putNumber("visionY", mtestimate.pose.getY());
-      SmartDashboard.putNumber("visionRDegrees", mtestimate.pose.getRotation().getDegrees());
+      // SmartDashboard.putNumber("visionX", mtestimate.pose.getX());
+      // SmartDashboard.putNumber("visionY", mtestimate.pose.getY());
+      // SmartDashboard.putNumber("visionRDegrees", mtestimate.pose.getRotation().getDegrees());
 
       // Add vision measurement
 

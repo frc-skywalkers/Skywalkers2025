@@ -39,7 +39,7 @@ public class Hang extends SubsystemBase {
   public boolean atPosition() {
     boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < HangConstants.tolerance;
     Logger.recordOutput("Hang/atPosition", ret);
-    System.out.println("FINISHED COMMAND!!!!!");
+    // System.out.println("FINISHED COMMAND!!!!!");
     return ret;
   }
 

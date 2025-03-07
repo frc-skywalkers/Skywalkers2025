@@ -22,16 +22,12 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -302,70 +298,74 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  public static Command autoAlignToPose(Drive drive, CommandXboxController joystick, Pose2d goal) {
-    ProfiledPIDController headingController =
-        new ProfiledPIDController(
-            3.0,
-            0.0,
-            0.05,
-            new Constraints(
-                drive.getMaxAngularSpeedRadPerSec(), drive.getMaxAngularSpeedRadPerSec()));
-    ProfiledPIDController xController =
-        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
-    ProfiledPIDController yController =
-        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
-    headingController.reset(
-        drive.getPose().getRotation().getRadians(),
-        drive.getFieldRelVelocity().omegaRadiansPerSecond);
-    xController.reset(drive.getPose().getX(), drive.getFieldRelVelocity().vxMetersPerSecond);
-    yController.reset(drive.getPose().getY(), drive.getFieldRelVelocity().vyMetersPerSecond);
+  // public static Command autoAlignToPose(Drive drive, CommandXboxController joystick, Pose2d goal)
+  // {
+  //   ProfiledPIDController headingController =
+  //       new ProfiledPIDController(
+  //           3.0,
+  //           0.0,
+  //           0.05,
+  //           new Constraints(
+  //               drive.getMaxAngularSpeedRadPerSec(), drive.getMaxAngularSpeedRadPerSec()));
+  //   ProfiledPIDController xController =
+  //       new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+  //   ProfiledPIDController yController =
+  //       new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+  //   headingController.reset(
+  //       drive.getPose().getRotation().getRadians(),
+  //       drive.getFieldRelVelocity().omegaRadiansPerSecond);
+  //   xController.reset(drive.getPose().getX(), drive.getFieldRelVelocity().vxMetersPerSecond);
+  //   yController.reset(drive.getPose().getY(), drive.getFieldRelVelocity().vyMetersPerSecond);
 
-    headingController.enableContinuousInput(-Math.PI, Math.PI);
+  //   headingController.enableContinuousInput(-Math.PI, Math.PI);
 
-    return Commands.run(
-            () -> {
-              double omegaOutput =
-                  headingController.calculate(
-                      drive.getPose().getRotation().getRadians(), goal.getRotation().getRadians());
-              double xOutput = xController.calculate(drive.getPose().getX(), goal.getX());
-              double yOutput = yController.calculate(drive.getPose().getY(), goal.getY());
-              double omegaSetpoint = headingController.getSetpoint().velocity;
-              double xSetpoint = xController.getSetpoint().velocity;
-              double ySetpoint = yController.getSetpoint().velocity;
-              drive.runVelocity(
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
-                      xOutput + xSetpoint,
-                      yOutput + ySetpoint,
-                      omegaOutput + omegaSetpoint,
-                      drive.getRotation()));
-            },
-            drive)
-        .until(() -> joystick.rightBumper().getAsBoolean());
-  }
+  //   return Commands.run(
+  //           () -> {
+  //             double omegaOutput =
+  //                 headingController.calculate(
+  //                     drive.getPose().getRotation().getRadians(),
+  // goal.getRotation().getRadians());
+  //             double xOutput = xController.calculate(drive.getPose().getX(), goal.getX());
+  //             double yOutput = yController.calculate(drive.getPose().getY(), goal.getY());
+  //             double omegaSetpoint = headingController.getSetpoint().velocity;
+  //             double xSetpoint = xController.getSetpoint().velocity;
+  //             double ySetpoint = yController.getSetpoint().velocity;
+  //             drive.runVelocity(
+  //                 ChassisSpeeds.fromFieldRelativeSpeeds(
+  //                     xOutput + xSetpoint,
+  //                     yOutput + ySetpoint,
+  //                     omegaOutput + omegaSetpoint,
+  //                     drive.getRotation()));
+  //           },
+  //           drive)
+  //       .until(() -> joystick.rightBumper().getAsBoolean());
+  // }
 
-  public static Command alignReef(Drive drive, CommandXboxController joystick) {
-    int tagID =
-        (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
+  // public static Command alignReef(Drive drive, CommandXboxController joystick) {
+  //   int tagID =
+  //       (int)
+  // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
 
-    Pose2d currGoal;
+  //   Pose2d currGoal;
 
-    if (isLeftReef) {
-      currGoal = VisionConstants.leftReefPoses[tagID];
-    } else {
-      currGoal = VisionConstants.rightReefPoses[tagID];
-    }
+  //   if (isLeftReef) {
+  //     currGoal = VisionConstants.leftReefPoses[tagID];
+  //   } else {
+  //     currGoal = VisionConstants.rightReefPoses[tagID];
+  //   }
 
-    return autoAlignToPose(drive, joystick, currGoal);
-  }
+  //   return autoAlignToPose(drive, joystick, currGoal);
+  // }
 
-  public static Command alignOther(Drive drive, CommandXboxController joystick) {
-    int tagID =
-        (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
+  // public static Command alignOther(Drive drive, CommandXboxController joystick) {
+  //   int tagID =
+  //       (int)
+  // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
 
-    Pose2d currGoal;
+  //   Pose2d currGoal;
 
-    currGoal = VisionConstants.otherPoses[tagID];
+  //   currGoal = VisionConstants.otherPoses[tagID];
 
-    return autoAlignToPose(drive, joystick, currGoal);
-  }
+  //   return autoAlignToPose(drive, joystick, currGoal);
+  // }
 }

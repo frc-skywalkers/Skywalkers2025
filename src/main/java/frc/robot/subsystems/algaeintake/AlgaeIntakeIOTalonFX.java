@@ -113,8 +113,8 @@ public class AlgaeIntakeIOTalonFX implements AlgaeIntakeIO {
     inputs.wheelVelocityRadPerSec = Units.rotationsToRadians(wheelVelocity.getValueAsDouble());
     inputs.wheelAppliedVolts = wheelAppliedVolts.getValueAsDouble();
 
-    System.out.println("LJKSDFLKJSJLDKFLJKSDF" + inputs.positionRad);
-    System.out.println("GOALPOS!!!" + inputs.goalPos);
+    // System.out.println("LJKSDFLKJSJLDKFLJKSDF" + inputs.positionRad);
+    // System.out.println("GOALPOS!!!" + inputs.goalPos);
   }
 
   @Override

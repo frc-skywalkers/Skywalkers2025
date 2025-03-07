@@ -64,9 +64,9 @@ public final class Constants {
 
   public static final class CoralIntakeConstants {
     public static final int pivotID = 40;
-    public static final int wheelID = 101; // need to change
+    public static final int wheelID = 51; // need to change
 
-    public static final double GEAR_RATIO = 3.0 * 4.0;
+    public static final double GEAR_RATIO = 4.0 * 4.0 * 5.0;
 
     public static final double level1 = 0.0;
     public static final double level2 = 0.0;
@@ -81,7 +81,7 @@ public final class Constants {
 
     public static final double tolerance = 0.05;
 
-    public static final double mm_cruisevel = 3.25;
+    public static final double mm_cruisevel = 0.8;
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
 

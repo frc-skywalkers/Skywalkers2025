@@ -230,16 +230,17 @@ public class RobotContainer {
 
     // operator.b().onTrue(Commands.runOnce(() -> hang.goToPosition(-21.0)));
 
-    operator.x().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(6.0)));
-    operator.y().onTrue(Commands.runOnce(() -> a_intake.goToPosition(-1.0)));
+    operator.x().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.200)));
+    operator.y().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.767)));
 
     // operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
     // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
 
-    operator.a().onTrue(OperatorCommands.testAndThen(elevator, a_intake, 22.0, -1.0)); // NEED TO
-    operator.b().onTrue(OperatorCommands.testAndThen(elevator, a_intake, 8.0, -0.5));
-    // CHANGE CORAL POSITION TO "DOWN" POSITION
+    operator.a().onTrue(OperatorCommands.testAndThen(elevator, c_intake, 22.0, 0.767));
+    // operator.b().onTrue(OperatorCommands.testAndThen(elevator, c_intake, 8.0, 0.5));
+
+    operator.b().onTrue(OperatorCommands.intakeCoral(c_intake));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);
