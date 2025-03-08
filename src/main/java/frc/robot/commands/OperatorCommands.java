@@ -58,7 +58,7 @@ public class OperatorCommands {
   // {elevator.goToPosition(e_pos);}, elevator);
   // }
 
-  public static Command testAndThen(
+  public static Command moveCoralElevator(
       Elevator elevator, CoralIntake c_intake, double e_pos, double c_pos) {
     return Commands.run(
             () -> {
@@ -81,6 +81,22 @@ public class OperatorCommands {
     //     },
     //     elevator,
     //     a_intake);
+  }
+
+  public static Command moveAlgaeElevator(
+      Elevator elevator, AlgaeIntake a_intake, double e_pos, double a_pos) {
+    return Commands.run(
+            () -> {
+              a_intake.goToPosition(a_pos);
+            },
+            a_intake)
+        .withTimeout(1.0) // to get it out of the way correctly, probably works
+        .andThen(
+            () -> {
+              elevator.goToPosition(e_pos);
+            },
+            elevator)
+        .until(() -> (a_intake.atPosition(a_pos) && elevator.atPosition(e_pos)));
   }
 
   public static Command moveElevator(Elevator elevator, double e_pos) {
@@ -130,12 +146,40 @@ public class OperatorCommands {
   }
 
   public static Command coralPickup(Elevator elevator, CoralIntake coral) {
-    return testAndThen(elevator, coral, ElevatorConstants.coralStation, CoralIntakeConstants.stationPickup)
-    .andThen(intakeCoral(coral))
-    .andThen(() -> coral.runVolts(CoralIntakeConstants.holdVolts));
+    return moveCoralElevator(
+            elevator, coral, ElevatorConstants.coralStation, CoralIntakeConstants.stationPickup)
+        .andThen(intakeCoral(coral))
+        .andThen(() -> coral.runVolts(CoralIntakeConstants.holdVolts));
   }
 
-  // public static Command outtakeL1()
+  // change these constants. they are bad.
+  public static Command outtakeL1(Elevator elevator, CoralIntake coral) {
+    return moveCoralElevator(elevator, coral, ElevatorConstants.level1, CoralIntakeConstants.level1)
+        .andThen(() -> coral.runVolts(-0.5)) // do -2.0 later or msth
+        .withTimeout(0.8)
+        .andThen(() -> coral.stop());
+  }
+
+  public static Command outtakeL2(Elevator elevator, CoralIntake coral) {
+    return moveCoralElevator(elevator, coral, ElevatorConstants.level2, CoralIntakeConstants.level2)
+        .andThen(() -> coral.runVolts(-4.0))
+        .withTimeout(0.8)
+        .andThen(() -> coral.stop());
+  }
+
+  public static Command outtakeL3(Elevator elevator, CoralIntake coral) {
+    return moveCoralElevator(elevator, coral, ElevatorConstants.level3, CoralIntakeConstants.level3)
+        .andThen(() -> coral.runVolts(-4.0))
+        .withTimeout(0.8)
+        .andThen(() -> coral.stop());
+  }
+
+  public static Command outtakeL4(Elevator elevator, CoralIntake coral) {
+    return moveCoralElevator(elevator, coral, ElevatorConstants.level4, CoralIntakeConstants.level4)
+        .andThen(() -> coral.runVolts(-4.0))
+        .withTimeout(0.8)
+        .andThen(() -> coral.stop());
+  }
 
   // fr commands to run during the game -- VERSION WITH VISION
 

@@ -3,14 +3,12 @@ package frc.robot.subsystems.coralintake;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -19,16 +17,14 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.CoralIntakeConstants;
-import org.littletonrobotics.junction.Logger;
 
 public class CoralIntakeIOTalonFX implements CoralIntakeIO {
   private double goalPos = 0.00;
 
   private final TalonFX pivot = new TalonFX(CoralIntakeConstants.pivotID);
   private final TalonFX wheel = new TalonFX(CoralIntakeConstants.wheelID);
-
-  private final CANcoder cancoder = new CANcoder(CoralIntakeConstants.encoderID);
 
   private final StatusSignal<Angle> position = pivot.getPosition();
   private final StatusSignal<AngularVelocity> velocity = pivot.getVelocity();
@@ -39,8 +35,6 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
   private final StatusSignal<AngularVelocity> wheelVelocity = wheel.getVelocity();
   private final StatusSignal<Voltage> wheelAppliedVolts = wheel.getMotorVoltage();
   private final StatusSignal<Current> wheelCurrent = wheel.getTorqueCurrent();
-
-  private final StatusSignal<Angle> absEncoderPos = cancoder.getAbsolutePosition();
 
   private double initialAbs = 0.0;
   private final double absEncoderOffset = 0.0; // FIND THIS VALUE!!!!!!!!!!!!!
@@ -98,8 +92,6 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
       System.out.println("Real Error, Could not configure device. Error: " + status.toString());
     }
 
-    cancoder.getConfigurator().apply(new CANcoderConfiguration());
-
     BaseStatusSignal.setUpdateFrequencyForAll(
         250.0, position, velocity, appliedVolts, current, goal);
     pivot.optimizeBusUtilization();
@@ -113,7 +105,6 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
     // the starting position is zeroed - need to make sure we start at same spot each
 
     // pivot.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); //this one fr
-    initialAbs = absEncoderPos.getValueAsDouble();
     outputOffset = initialAbs - absEncoderOffset;
   }
 
@@ -132,8 +123,7 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
     inputs.wheelVelocityRadPerSec = Units.rotationsToRadians(wheelVelocity.getValueAsDouble());
     inputs.wheelAppliedVolts = wheelAppliedVolts.getValueAsDouble();
 
-    Logger.recordOutput("Elevator/initialAbs", initialAbs);
-    Logger.recordOutput("Elevator/outputOffset", outputOffset);
+    SmartDashboard.putNumber("Coral pos", position.getValueAsDouble());
   }
 
   @Override

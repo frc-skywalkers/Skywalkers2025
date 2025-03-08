@@ -68,11 +68,11 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 4.0 * 4.0 * 5.0;
 
-    public static final double level1 = 0.0;
+    public static final double level1 = 0.66; // slightly up from horizontal possibly bad constant
     public static final double level2 = 0.0;
     public static final double level3 = 0.0;
     public static final double level4 = 0.0;
-    public static final double stationPickup = 0.0;
+    public static final double stationPickup = 0.2; // BAD. wrong
     public static final double stow = 0.0;
 
     public static final double intakeVolts = 8.0;
@@ -95,13 +95,13 @@ public final class Constants {
     public static final double GEAR_RATIO = 20.0;
 
     public static final double groundPos = 0.0;
-    public static final double level1 = 0.0;
+    public static final double level1 = 8.0; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
     public static final double level2 = 0.0;
     public static final double level3 = 0.0;
     public static final double level4 = 0.0;
     public static final double pickupA = 0.0;
     public static final double pickupB = 0.0;
-    public static final double coralStation = 0.0;
+    public static final double coralStation = 18.0; // BAD!!
 
     public static final double mm_cruisevel = 3.5;
     public static final double mm_accel = mm_cruisevel * 4.5;

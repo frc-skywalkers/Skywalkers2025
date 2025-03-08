@@ -70,7 +70,7 @@ public class RobotContainer {
   private final LoggedNetworkNumber elevator_Pos =
       new LoggedNetworkNumber("/SmartDashboard/ePos", 6.63);
 
-  public double multiplier = 1;
+  public boolean slowMode = false;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -133,7 +133,9 @@ public class RobotContainer {
         "algae pivot out", OperatorCommands.moveAlgae(a_intake, -1.0)); // check value
 
     NamedCommands.registerCommand(
-        "coral pivot down", OperatorCommands.moveCoral(c_intake, 0.0)); // check value
+        "coral pivot down", OperatorCommands.moveCoral(c_intake, 7.67)); // horizontal value
+
+    NamedCommands.registerCommand("L3 outtake", OperatorCommands.outtakeL3(elevator, c_intake));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -176,13 +178,22 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY() * 0.25,
-            () -> -controller.getLeftX() * 0.25,
-            () -> -controller.getRightX() * 0.25));
 
+    if (slowMode) {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> -controller.getLeftY() * 0.07,
+              () -> -controller.getLeftX() * 0.07,
+              () -> -controller.getRightX() * 0.07));
+    } else {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> -controller.getLeftY() * 0.25,
+              () -> -controller.getLeftX() * 0.25,
+              () -> -controller.getRightX() * 0.25));
+    }
     // joystick hang for testing
     // hang.setDefaultCommand(
     //     Commands.run(
@@ -215,9 +226,21 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    if (controller.rightBumper().getAsBoolean()) {
-      multiplier = 0.25;
-    }
+    elevator.setDefaultCommand(
+        Commands.runOnce(() -> elevator.runVolts(operator.getLeftX() * 3.8), elevator));
+    c_intake.setDefaultCommand(
+        Commands.runOnce(() -> c_intake.runVolts(operator.getRightX() * 1.2), c_intake));
+
+    operator.x().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(4.0)));
+    operator.y().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(-0.5)));
+    operator.leftBumper().onTrue(Commands.runOnce(() -> c_intake.stopWheels()));
+
+    operator.a().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(4.0)));
+    operator.b().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(-4.0)));
+    operator.rightBumper().onTrue(Commands.runOnce(() -> a_intake.stopWheels()));
+
+    operator.leftTrigger().onTrue(Commands.runOnce(() -> elevator.goToPosition(6.63)));
+    operator.rightTrigger().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.5)));
 
     // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
 
@@ -230,17 +253,21 @@ public class RobotContainer {
 
     // operator.b().onTrue(Commands.runOnce(() -> hang.goToPosition(-21.0)));
 
-    operator.x().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.200)));
-    operator.y().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.767)));
+    // operator.x().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.200)));
+    // operator.y().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.767)));
 
     // operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
 
     // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
 
-    operator.a().onTrue(OperatorCommands.testAndThen(elevator, c_intake, 22.0, 0.767));
+    // operator.a().onTrue(OperatorCommands.coralPickup(elevator, c_intake));
+    // operator.b().onTrue(OperatorCommands.outtakeL1(elevator, c_intake));
+
+    // operator.rightBumper().onTrue(OperatorCommands.coralPickup(elevator, c_intake));
+
     // operator.b().onTrue(OperatorCommands.testAndThen(elevator, c_intake, 8.0, 0.5));
 
-    operator.b().onTrue(OperatorCommands.intakeCoral(c_intake));
+    // operator.b().onTrue(OperatorCommands.intakeCoral(c_intake));
 
     // PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     // aimController.enableContinuousInput(-Math.PI, Math.PI);

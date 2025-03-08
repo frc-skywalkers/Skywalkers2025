@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ElevatorConstants;
 import org.littletonrobotics.junction.Logger;
 
@@ -58,7 +59,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     pidConfigs.GravityType = GravityTypeValue.Elevator_Static;
     pidConfigs.kS = 0.15; // check all these values
-    pidConfigs.kG = 0.28;
+    pidConfigs.kG = 0.28; // 0.28 earlier
     pidConfigs.kP = 30.0; // 20.0 0.03 rad
     pidConfigs.kI = 0.00;
     pidConfigs.kD = 3.0;
@@ -109,8 +110,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     // leftElevator.setPosition(0.0);
     // rightElevator.setPosition(0.0);
 
-    leftElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset); // this one fr
-    rightElevator.setPosition(absEncoderPos.getValueAsDouble() - absEncoderOffset);
+    leftElevator.setPosition(0.0); // this one fr
+    rightElevator.setPosition(0.0);
+    // absEncoderPos.getValueAsDouble() - absEncoderOffset
 
     initialAbs = absEncoderPos.getValueAsDouble();
     Logger.recordOutput("Elevator/initialAbs1", initialAbs);
@@ -142,6 +144,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     Logger.recordOutput("Elevator/initialAbs", initialAbs);
     Logger.recordOutput("Elevator/outputOffset", outputOffset);
     Logger.recordOutput("Elevator/absEncoder", absEncoderPos.getValueAsDouble());
+
+    SmartDashboard.putNumber("Elevator pos", leftPosition.getValueAsDouble());
   }
 
   @Override
