@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "coral pivot down"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "1A"
+            "pathName": "straight"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L3 outtake"
+            "name": "L3"
           }
         }
       ]

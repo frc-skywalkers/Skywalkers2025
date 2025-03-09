@@ -42,17 +42,14 @@ public final class Constants {
     public static final int pivotID = 54; // change
     public static final int wheelID = 55;
 
-    public static final double GEAR_RATIO = 3.0 * 4.0; // check this one
+    public static final double GEAR_RATIO = 45.0;
 
-    public static final double reefPickupA = 0.0; // lower
-    public static final double reefPickupB = 0.0;
-    public static final double groundPickup = 0.0;
-    public static final double coralPickup = 0.0;
-    public static final double stow = 0.0;
+    public static final double outPos = -0.8;
+    public static final double stow = 0.05;
 
-    public static final double intakeVolts = 8.0;
-    public static final double holdVolts = 1.0;
-    public static final double outtakeVolts = -6.0;
+    public static final double intakeVolts = -8.5;
+    public static final double holdVolts = -1.0; // not used
+    public static final double outtakeVolts = 4.0;
 
     public static final double tolerance = 0.1;
     public static final double downtolerance = 0.085;
@@ -68,20 +65,21 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 4.0 * 4.0 * 5.0;
 
-    public static final double level1 = 0.66; // slightly up from horizontal possibly bad constant
-    public static final double level2 = 0.0;
-    public static final double level3 = 0.0;
-    public static final double level4 = 0.0;
-    public static final double stationPickup = 0.2; // BAD. wrong
-    public static final double stow = 0.0;
+    public static final double level1 = 1.445; // who knows bruh
+    public static final double level2 = 1.617;
+    public static final double level3 = 1.617;
+    public static final double level4 = 0.0; // hahahahahahahahaha
+    public static final double stationPickup = 0.485; // ? 0.518
+    public static final double stow = 0.1;
+    public static final double horiz = 0.767;
 
-    public static final double intakeVolts = 8.0;
-    public static final double holdVolts = 1.0;
-    public static final double outtakeVolts = -6.0;
+    public static final double intakeVolts = 4.0;
+    public static final double holdVolts = 0.5;
+    public static final double outtakeVolts = -2.0;
 
     public static final double tolerance = 0.05;
 
-    public static final double mm_cruisevel = 0.8;
+    public static final double mm_cruisevel = 0.6;
     public static final double mm_accel = mm_cruisevel * 4.5;
     public static final double mm_jerk = mm_accel * 4.0;
 
@@ -94,14 +92,14 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 20.0;
 
-    public static final double groundPos = 0.0;
-    public static final double level1 = 8.0; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
-    public static final double level2 = 0.0;
-    public static final double level3 = 0.0;
-    public static final double level4 = 0.0;
-    public static final double pickupA = 0.0;
-    public static final double pickupB = 0.0;
-    public static final double coralStation = 18.0; // BAD!!
+    public static final double groundPos = 0.4;
+    public static final double level1 = 6.035; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
+    public static final double level2 = 6.148;
+    public static final double level3 = 15.642;
+    public static final double level4 = 0.0; // hahahah
+    public static final double upperAlgae = 24.463;
+    public static final double lowerAlgae = 14.674;
+    public static final double coralStation = 3.188; // BAD!!
 
     public static final double mm_cruisevel = 3.5;
     public static final double mm_accel = mm_cruisevel * 4.5;
@@ -110,7 +108,7 @@ public final class Constants {
     public static final double tolerance = 0.02;
 
     public static final double kTopLimit = 25.0; // radians
-    public static final double kBottomLimit = 0.05; // ?
+    public static final double kBottomLimit = 0; // ?
     public static final int encoderID = 62; // change this number wheehoo
   }
 

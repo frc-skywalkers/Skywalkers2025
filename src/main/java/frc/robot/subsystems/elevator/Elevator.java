@@ -87,7 +87,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isHomed() {
-    return inputs.currentAmps[0] < -20.0; // check, was -18
+    return inputs.currentAmps[0] < -30.0; // check, was -18
   }
 
   // public void enableSoftLimits() {

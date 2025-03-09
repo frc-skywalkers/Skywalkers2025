@@ -27,7 +27,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,7 +39,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -73,7 +71,7 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088;
+  private static final double ROBOT_MASS_KG = 69.4;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 1.2;
   private static final RobotConfig PP_CONFIG =
@@ -114,13 +112,16 @@ public class Drive extends SubsystemBase {
   // //no vis version
 
   private SwerveDrivePoseEstimator poseEstimator =
-      new SwerveDrivePoseEstimator(
-          kinematics,
-          rawGyroRotation,
-          lastModulePositions,
-          new Pose2d(),
-          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(30)));
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+
+  // private SwerveDrivePoseEstimator poseEstimator =
+  //     new SwerveDrivePoseEstimator(
+  //         kinematics,
+  //         rawGyroRotation,
+  //         lastModulePositions,
+  //         new Pose2d(),
+  //         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+  //         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(30)));
   // state standard devs, then vision standard devs
 
   public Drive(
@@ -180,6 +181,7 @@ public class Drive extends SubsystemBase {
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
+    SmartDashboard.putNumber("yaw", gyroInputs.yawPosition.getDegrees());
     for (var module : modules) {
       module.periodic();
     }
@@ -227,7 +229,8 @@ public class Drive extends SubsystemBase {
       }
 
       // Apply update
-      poseEstimator.update(rawGyroRotation, modulePositions);
+      poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+      // poseEstimator.update(rawGyroRotation, modulePositions);
 
       // boolean doRejectUpdate = false;
       // LimelightHelpers.SetRobotOrientation(

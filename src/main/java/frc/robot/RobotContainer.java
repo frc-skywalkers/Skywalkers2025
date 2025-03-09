@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.AlgaeIntakeConstants;
+import frc.robot.Constants.CoralIntakeConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.OperatorCommands;
@@ -46,7 +48,6 @@ import frc.robot.subsystems.hang.Hang;
 import frc.robot.subsystems.hang.HangIO;
 import frc.robot.subsystems.hang.HangIOTalonFX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,12 +67,6 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController operator = new CommandXboxController(1);
-
-  private final LoggedNetworkNumber elevator_Pos =
-      new LoggedNetworkNumber("/SmartDashboard/ePos", 6.63);
-
-  public boolean slowMode = false;
-
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -125,17 +120,30 @@ public class RobotContainer {
         break;
     }
 
-    NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
+    // NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
 
-    NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
-
-    NamedCommands.registerCommand(
-        "algae pivot out", OperatorCommands.moveAlgae(a_intake, -1.0)); // check value
+    // NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
 
     NamedCommands.registerCommand(
-        "coral pivot down", OperatorCommands.moveCoral(c_intake, 7.67)); // horizontal value
+        "algae pivot out",
+        OperatorCommands.moveAlgae(a_intake, AlgaeIntakeConstants.stow)); // check value
 
-    NamedCommands.registerCommand("L3 outtake", OperatorCommands.outtakeL3(elevator, c_intake));
+    NamedCommands.registerCommand(
+        "coral pivot down",
+        OperatorCommands.moveCoral(c_intake, CoralIntakeConstants.horiz)); // horizontal value
+    // 0.767 is the horizontal value
+
+    NamedCommands.registerCommand("L1", OperatorCommands.goToLevel1(c_intake, elevator, a_intake));
+    NamedCommands.registerCommand("L2", OperatorCommands.goToLevel2(c_intake, elevator, a_intake));
+    NamedCommands.registerCommand("L3", OperatorCommands.goToLevel3(c_intake, elevator, a_intake));
+    NamedCommands.registerCommand(
+        "ground", OperatorCommands.goToGround(c_intake, elevator, a_intake));
+    NamedCommands.registerCommand("outtakeCoral", OperatorCommands.outtakeCoral(c_intake));
+    NamedCommands.registerCommand("intakeCoral", OperatorCommands.intakeCoral(c_intake));
+    NamedCommands.registerCommand(
+        "coralStation", OperatorCommands.goToStation(c_intake, elevator, a_intake));
+
+    // NamedCommands.registerCommand("L3 outtake", OperatorCommands.outtakeL3(elevator, c_intake));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -179,20 +187,20 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    if (slowMode) {
+    if (controller.rightTrigger().getAsBoolean()) {
       drive.setDefaultCommand(
           DriveCommands.joystickDrive(
               drive,
-              () -> -controller.getLeftY() * 0.07,
-              () -> -controller.getLeftX() * 0.07,
-              () -> -controller.getRightX() * 0.07));
+              () -> -controller.getLeftY() * 0.4,
+              () -> -controller.getLeftX() * 0.4,
+              () -> -controller.getRightX() * 0.4));
     } else {
       drive.setDefaultCommand(
           DriveCommands.joystickDrive(
               drive,
-              () -> -controller.getLeftY() * 0.25,
-              () -> -controller.getLeftX() * 0.25,
-              () -> -controller.getRightX() * 0.25));
+              () -> -controller.getLeftY(),
+              () -> -controller.getLeftX(),
+              () -> -controller.getRightX()));
     }
     // joystick hang for testing
     // hang.setDefaultCommand(
@@ -226,39 +234,37 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    elevator.setDefaultCommand(
-        Commands.runOnce(() -> elevator.runVolts(operator.getLeftX() * 3.8), elevator));
-    c_intake.setDefaultCommand(
-        Commands.runOnce(() -> c_intake.runVolts(operator.getRightX() * 1.2), c_intake));
+    controller.povDown().onTrue(OperatorCommands.zeroElevator(elevator)); // move this somewhere
 
-    operator.x().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(4.0)));
-    operator.y().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(-0.5)));
-    operator.leftBumper().onTrue(Commands.runOnce(() -> c_intake.stopWheels()));
+    operator.povDown().onTrue(OperatorCommands.goToLowerAlgae(c_intake, elevator, a_intake));
+    operator.povUp().onTrue(OperatorCommands.goToUpperAlgae(c_intake, elevator, a_intake));
+    operator.povLeft().onTrue(OperatorCommands.goToGround(c_intake, elevator, a_intake));
+    operator.povRight().onTrue(OperatorCommands.stowAll(c_intake, elevator, a_intake));
+    operator.leftBumper().onTrue(OperatorCommands.outtakeAlgae(a_intake));
+    operator.leftTrigger().whileTrue(OperatorCommands.intakeAlgae(a_intake)); // check
+    operator.a().onTrue(OperatorCommands.goToLevel1(c_intake, elevator, a_intake));
+    operator.x().onTrue(OperatorCommands.goToLevel2(c_intake, elevator, a_intake));
+    operator.y().onTrue(OperatorCommands.goToLevel3(c_intake, elevator, a_intake));
+    operator.b().onTrue(OperatorCommands.goToStation(c_intake, elevator, a_intake));
+    operator.rightBumper().onTrue(OperatorCommands.outtakeCoral(c_intake));
+    operator.rightTrigger().whileTrue(OperatorCommands.intakeCoral(c_intake)); // check
 
-    operator.a().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(4.0)));
-    operator.b().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(-4.0)));
-    operator.rightBumper().onTrue(Commands.runOnce(() -> a_intake.stopWheels()));
+    // *** TESTING *** ///
+    // elevator.setDefaultCommand(
+    //     Commands.runOnce(() -> elevator.runVolts(operator.getLeftX() * 3.8), elevator));
+    // c_intake.setDefaultCommand(
+    //     Commands.runOnce(() -> c_intake.runVolts(operator.getRightX() * 1.2), c_intake));
 
-    operator.leftTrigger().onTrue(Commands.runOnce(() -> elevator.goToPosition(6.63)));
-    operator.rightTrigger().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.5)));
+    // operator.x().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(4.0)));
+    // operator.y().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(-0.5)));
+    // operator.leftBumper().onTrue(Commands.runOnce(() -> c_intake.stopWheels()));
 
-    // controller.y().onTrue(Commands.runOnce(() -> a_intake.runVolts(4.0)));
+    // operator.a().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(4.0)));
+    // operator.b().onTrue(Commands.runOnce(() -> a_intake.runWheelVolts(-4.0)));
+    // operator.rightBumper().onTrue(Commands.runOnce(() -> a_intake.stopWheels()));
 
-    // operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(elevator_Pos.get())));
-    // System.out.println(elevator_Pos.get());
-
-    // operator.x().onTrue(Commands.runOnce(() -> elevator.goToPosition(22.0)));
-    // operator.y().onTrue(Commands.runOnce(() -> elevator.goToPosition(15.0)));
-    // operator.a().onTrue(Commands.runOnce(() -> elevator.goToPosition(8.0)));
-
-    // operator.b().onTrue(Commands.runOnce(() -> hang.goToPosition(-21.0)));
-
-    // operator.x().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.200)));
-    // operator.y().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.767)));
-
-    // operator.y().onTrue(Commands.runOnce(() -> elevator.resetPosition()));
-
-    // operator.a().onTrue(OperatorCommands.zeroElevator(elevator));
+    // operator.leftTrigger().onTrue(Commands.runOnce(() -> elevator.goToPosition(6.63)));
+    // operator.rightTrigger().onTrue(Commands.runOnce(() -> c_intake.goToPosition(0.5)));
 
     // operator.a().onTrue(OperatorCommands.coralPickup(elevator, c_intake));
     // operator.b().onTrue(OperatorCommands.outtakeL1(elevator, c_intake));

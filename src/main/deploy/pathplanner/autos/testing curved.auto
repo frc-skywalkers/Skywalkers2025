@@ -5,27 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "ForwardPath"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "elevator up"
+            "name": "L3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BackwardPath"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "elevator down"
+            "pathName": "curve"
           }
         }
       ]
