@@ -28,6 +28,12 @@
           "data": {
             "name": "outtakeCoral"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ground"
+          }
         }
       ]
     }

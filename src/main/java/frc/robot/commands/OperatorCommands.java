@@ -245,7 +245,15 @@ public class OperatorCommands {
         .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
         .andThen(moveElevator(elevator, ElevatorConstants.groundPos))
         .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  } // dont need this?
+
+  public static Command goToProcessor(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+    return moveCoral(coral, CoralIntakeConstants.horiz)
+        .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
+        .andThen(moveElevator(elevator, ElevatorConstants.groundPos + 0.3))
+        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
   }
+
   // public static Command coralPickup(Elevator elevator, CoralIntake coral) {
   //   return moveCoralElevator(
   //           elevator, coral, ElevatorConstants.coralStation, CoralIntakeConstants.stationPickup)

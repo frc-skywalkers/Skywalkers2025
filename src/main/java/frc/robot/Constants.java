@@ -44,7 +44,7 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 45.0;
 
-    public static final double outPos = -0.8;
+    public static final double outPos = -1.3;
     public static final double stow = 0.05;
 
     public static final double intakeVolts = -8.5;
