@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.AlgaeIntakeConstants;
 import frc.robot.Constants.CoralIntakeConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.algaeintake.AlgaeIntake;
 import frc.robot.subsystems.coralintake.CoralIntake;
 import frc.robot.subsystems.elevator.Elevator;
@@ -128,14 +127,14 @@ public class OperatorCommands {
         .until(() -> algae.atPosition(a_pos));
   }
 
-  public static Command moveCoral(CoralIntake coral, double c_pos) {
-    return Commands.run(
-            () -> {
-              coral.goToPosition(c_pos);
-            },
-            coral)
-        .until(() -> coral.atPosition(c_pos));
-  }
+  // public static Command moveCoral(CoralIntake coral, double c_pos) {
+  //   return Commands.run(
+  //           () -> {
+  //             coral.goToPosition(c_pos);
+  //           },
+  //           coral)
+  //       .until(() -> coral.atPosition(c_pos));
+  // }
 
   // good commands to use
 
@@ -191,68 +190,68 @@ public class OperatorCommands {
         .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow));
   }
 
-  public static Command goToLevel1(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveAlgae(algae, AlgaeIntakeConstants.stow)
-        .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
-        .andThen(moveElevator(elevator, ElevatorConstants.level1))
-        .andThen(moveCoral(coral, CoralIntakeConstants.level1));
-  }
+  // public static Command goToLevel1(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveAlgae(algae, AlgaeIntakeConstants.stow)
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.level1))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.level1));
+  // }
 
-  public static Command goToLevel2(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveAlgae(algae, AlgaeIntakeConstants.stow)
-        .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
-        .andThen(moveElevator(elevator, ElevatorConstants.level2))
-        .andThen(moveCoral(coral, CoralIntakeConstants.level2));
-  }
+  // public static Command goToLevel2(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveAlgae(algae, AlgaeIntakeConstants.stow)
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.level2))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.level2));
+  // }
 
-  public static Command goToLevel3(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveAlgae(algae, AlgaeIntakeConstants.stow)
-        .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
-        .andThen(moveElevator(elevator, ElevatorConstants.level3))
-        .andThen(moveCoral(coral, CoralIntakeConstants.level3));
-  }
+  // public static Command goToLevel3(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveAlgae(algae, AlgaeIntakeConstants.stow)
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.level3))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.level3));
+  // }
 
-  public static Command goToStation(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveAlgae(algae, AlgaeIntakeConstants.stow)
-        .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
-        .andThen(moveElevator(elevator, ElevatorConstants.coralStation))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stationPickup));
-  }
+  // public static Command goToStation(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveAlgae(algae, AlgaeIntakeConstants.stow)
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.horiz))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.coralStation))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stationPickup));
+  // }
 
-  public static Command goToGround(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveCoral(coral, CoralIntakeConstants.horiz)
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
-        .andThen(moveElevator(elevator, ElevatorConstants.groundPos))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
-  }
+  // public static Command goToGround(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveCoral(coral, CoralIntakeConstants.horiz)
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.groundPos))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  // }
 
-  public static Command goToUpperAlgae(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveCoral(coral, CoralIntakeConstants.horiz)
-        .andThen(moveElevator(elevator, ElevatorConstants.upperAlgae))
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.outPos))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
-  }
+  // public static Command goToUpperAlgae(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveCoral(coral, CoralIntakeConstants.horiz)
+  //       .andThen(moveElevator(elevator, ElevatorConstants.upperAlgae))
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.outPos))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  // }
 
-  public static Command goToLowerAlgae(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveCoral(coral, CoralIntakeConstants.horiz)
-        .andThen(moveElevator(elevator, ElevatorConstants.lowerAlgae))
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.outPos))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
-  }
+  // public static Command goToLowerAlgae(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveCoral(coral, CoralIntakeConstants.horiz)
+  //       .andThen(moveElevator(elevator, ElevatorConstants.lowerAlgae))
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.outPos))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  // }
 
-  public static Command stowAll(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveCoral(coral, CoralIntakeConstants.horiz)
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
-        .andThen(moveElevator(elevator, ElevatorConstants.groundPos))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
-  } // dont need this?
+  // public static Command stowAll(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveCoral(coral, CoralIntakeConstants.horiz)
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.groundPos))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  // } // dont need this?
 
-  public static Command goToProcessor(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
-    return moveCoral(coral, CoralIntakeConstants.horiz)
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
-        .andThen(moveElevator(elevator, ElevatorConstants.groundPos + 0.3))
-        .andThen(moveCoral(coral, CoralIntakeConstants.stow));
-  }
+  // public static Command goToProcessor(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
+  //   return moveCoral(coral, CoralIntakeConstants.horiz)
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow))
+  //       .andThen(moveElevator(elevator, ElevatorConstants.groundPos + 0.3))
+  //       .andThen(moveCoral(coral, CoralIntakeConstants.stow));
+  // }
 
   // public static Command coralPickup(Elevator elevator, CoralIntake coral) {
   //   return moveCoralElevator(

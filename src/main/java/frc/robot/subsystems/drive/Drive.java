@@ -27,6 +27,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,6 +40,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -111,17 +113,18 @@ public class Drive extends SubsystemBase {
   // Pose2d());
   // //no vis version
 
-  private SwerveDrivePoseEstimator poseEstimator =
-      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-
   // private SwerveDrivePoseEstimator poseEstimator =
-  //     new SwerveDrivePoseEstimator(
-  //         kinematics,
-  //         rawGyroRotation,
-  //         lastModulePositions,
-  //         new Pose2d(),
-  //         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-  //         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(30)));
+  //     new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new
+  // Pose2d());
+
+  private SwerveDrivePoseEstimator poseEstimator =
+      new SwerveDrivePoseEstimator(
+          kinematics,
+          rawGyroRotation,
+          lastModulePositions,
+          new Pose2d(),
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(30)));
   // state standard devs, then vision standard devs
 
   public Drive(
@@ -253,13 +256,13 @@ public class Drive extends SubsystemBase {
       //   poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
       // }
 
-      SmartDashboard.putNumber("estimatedX", getPose().getX());
-      SmartDashboard.putNumber("estimatedY", getPose().getY());
-      SmartDashboard.putNumber("estimatedRDegrees", getPose().getRotation().getDegrees());
+      Logger.recordOutput("Drive/estimatedX", getPose().getX());
+      Logger.recordOutput("Drive/estimatedY", getPose().getY());
+      Logger.recordOutput("Drive/estimatedRDegrees", getPose().getRotation().getDegrees());
 
-      // SmartDashboard.putNumber("visionX", mtestimate.pose.getX());
-      // SmartDashboard.putNumber("visionY", mtestimate.pose.getY());
-      // SmartDashboard.putNumber("visionRDegrees", mtestimate.pose.getRotation().getDegrees());
+      // Logger.recordOutput("Drive/visionX", mtestimate.pose.getX());
+      // Logger.recordOutput("Drive/visionY", mtestimate.pose.getY());
+      // Logger.recordOutput("Drive/visionRDegrees", mtestimate.pose.getRotation().getDegrees());
 
       // Add vision measurement
 

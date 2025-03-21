@@ -61,7 +61,7 @@ public final class Constants {
 
   public static final class CoralIntakeConstants {
     public static final int pivotID = 40;
-    public static final int wheelID = 51; // need to change
+    public static final int wheelID = 20; // need to change
 
     public static final double GEAR_RATIO = 4.0 * 4.0 * 5.0;
 
