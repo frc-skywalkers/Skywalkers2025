@@ -51,7 +51,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-// import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -61,6 +61,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
+  private double visionRot = 0;
+
   static final double ODOMETRY_FREQUENCY =
       new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
   public static final double DRIVE_BASE_RADIUS =
@@ -112,10 +114,6 @@ public class Drive extends SubsystemBase {
   //     new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new
   // Pose2d());
   // //no vis version
-
-  // private SwerveDrivePoseEstimator poseEstimator =
-  //     new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new
-  // Pose2d());
 
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(
@@ -235,41 +233,45 @@ public class Drive extends SubsystemBase {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
       // poseEstimator.update(rawGyroRotation, modulePositions);
 
-      // boolean doRejectUpdate = false;
-      // LimelightHelpers.SetRobotOrientation(
-      //     "limelight",
-      //     poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
-      //     0,
-      //     0,
-      //     0,
-      //     0,
-      //     0);
-      // LimelightHelpers.PoseEstimate mtestimate =
-      //     LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      // if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
-      //   doRejectUpdate = true;
-      // }
-      // if (mtestimate.tagCount == 0) {
-      //   doRejectUpdate = true;
-      // }
-      // if (!doRejectUpdate) {
-      //   poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
-      // }
+      // comment out to remove vision influence on pose estimate
+      boolean doRejectUpdate = false;
+      LimelightHelpers.SetRobotOrientation(
+          "limelight",
+          poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+          0,
+          0,
+          0,
+          0,
+          0);
+      LimelightHelpers.PoseEstimate mtestimate =
+          LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
+        doRejectUpdate = true;
+      }
+      if (mtestimate.tagCount == 0) {
+        doRejectUpdate = true;
+      }
+      if (!doRejectUpdate) {
+        poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
+      }
 
       Logger.recordOutput("Drive/estimatedX", getPose().getX());
       Logger.recordOutput("Drive/estimatedY", getPose().getY());
-      Logger.recordOutput("Drive/estimatedRDegrees", getPose().getRotation().getDegrees());
+      Logger.recordOutput(
+          "Drive/estimatedRDegrees", getPose().getRotation().getDegrees()); // no Vis influence
 
-      // Logger.recordOutput("Drive/visionX", mtestimate.pose.getX());
-      // Logger.recordOutput("Drive/visionY", mtestimate.pose.getY());
-      // Logger.recordOutput("Drive/visionRDegrees", mtestimate.pose.getRotation().getDegrees());
-
-      // Add vision measurement
-
+      Logger.recordOutput("Drive/visionX", mtestimate.pose.getX());
+      Logger.recordOutput("Drive/visionY", mtestimate.pose.getY());
+      Logger.recordOutput("Drive/visionRDegrees", mtestimate.pose.getRotation().getDegrees());
+      visionRot = mtestimate.pose.getRotation().getDegrees();
     }
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+  }
+
+  public double getVisionRot() {
+    return visionRot;
   }
 
   /**
