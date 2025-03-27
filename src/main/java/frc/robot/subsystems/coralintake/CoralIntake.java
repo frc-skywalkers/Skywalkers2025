@@ -19,7 +19,7 @@ public class CoralIntake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("CoralIntake", inputs);
 
-    Logger.recordOutput("CoralIntake/hasPiece", hasPiece());
+    Logger.recordOutput("CoralIntake/hasPiece", inputs.hasPiece);
   }
 
   // public void runVolts(double volts) {
@@ -74,7 +74,8 @@ public class CoralIntake extends SubsystemBase {
 
   public boolean hasPiece() {
     // if (Constants.currentMode == Mode.SIM) return true;
-    return inputs.currentAmps[1] > (45.0); // check sign + amps number
+    // return inputs.currentAmps[1] > (45.0); // check sign + amps number
+    return inputs.hasPiece;
   }
 
   // public boolean atPosition() {

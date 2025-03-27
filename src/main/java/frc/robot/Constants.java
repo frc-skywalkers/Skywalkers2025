@@ -84,6 +84,7 @@ public final class Constants {
     public static final double mm_jerk = mm_accel * 4.0;
 
     public static final int encoderID = 300;
+    public static final int beamBreakID = 0;
   }
 
   public static final class ElevatorConstants {

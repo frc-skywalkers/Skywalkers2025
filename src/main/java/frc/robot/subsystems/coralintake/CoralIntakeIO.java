@@ -18,6 +18,8 @@ public interface CoralIntakeIO {
     // for the wheels; position not needed
     public double wheelVelocityRadPerSec = 0.0;
     public double wheelAppliedVolts = 0.0;
+
+    public boolean hasPiece = false;
   }
 
   // for pivot

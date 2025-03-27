@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.CoralIntakeConstants;
 
 public class CoralIntakeIOTalonFX implements CoralIntakeIO {
@@ -18,6 +19,8 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
 
   // private final TalonFX pivot = new TalonFX(CoralIntakeConstants.pivotID);
   private final TalonFX wheel = new TalonFX(CoralIntakeConstants.wheelID);
+
+  private final DigitalInput beamBreak = new DigitalInput(CoralIntakeConstants.beamBreakID);
 
   // private final StatusSignal<Angle> position = pivot.getPosition();
   // private final StatusSignal<AngularVelocity> velocity = pivot.getVelocity();
@@ -117,6 +120,8 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
     inputs.wheelVelocityRadPerSec = Units.rotationsToRadians(wheelVelocity.getValueAsDouble());
     inputs.wheelAppliedVolts = wheelAppliedVolts.getValueAsDouble();
 
+    inputs.hasPiece = hasPiece();
+
     // SmartDashboard.putNumber("Coral pos", position.getValueAsDouble());
   }
 
@@ -153,5 +158,9 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
 
   public double getWheelCurrent() {
     return wheelCurrent.getValueAsDouble();
+  }
+
+  public boolean hasPiece() {
+    return beamBreak.get();
   }
 }
