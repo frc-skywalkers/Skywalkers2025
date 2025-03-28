@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1A"
+            "pathName": "3C"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AG"
+            "pathName": "CH"
           }
         },
         {
@@ -49,13 +49,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GF"
+            "pathName": "HD"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "elevator L3"
+            "name": "L3"
           }
         },
         {

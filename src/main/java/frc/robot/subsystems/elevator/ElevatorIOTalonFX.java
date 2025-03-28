@@ -145,7 +145,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     Logger.recordOutput("Elevator/outputOffset", outputOffset);
     Logger.recordOutput("Elevator/absEncoder", absEncoderPos.getValueAsDouble());
 
-    SmartDashboard.putNumber("Elevator pos", leftPosition.getValueAsDouble());
+    SmartDashboard.putNumber(
+        "Elevator pos", Units.rotationsToRadians(leftPosition.getValueAsDouble()));
   }
 
   @Override

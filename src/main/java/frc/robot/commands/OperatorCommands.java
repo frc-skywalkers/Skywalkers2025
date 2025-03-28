@@ -2,9 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-// import frc.robot.Constants.AlgaeIntakeConstants;
+import frc.robot.Constants.AlgaeIntakeConstants;
 import frc.robot.Constants.CoralIntakeConstants;
-// import frc.robot.subsystems.algaeintake.AlgaeIntake;
+import frc.robot.Constants.HangConstants;
+import frc.robot.subsystems.algaeintake.AlgaeIntake;
 import frc.robot.subsystems.coralintake.CoralIntake;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.hang.Hang;
@@ -164,6 +165,22 @@ public class OperatorCommands {
               coral.stopWheels();
             },
             coral);
+  }
+
+  public static Command hangUp(Hang hang){
+    return Commands.run(
+      () -> {
+        hang.runVolts(HangConstants.liftUpVolts);
+      }, 
+      hang)
+      .until(() -> hang.hitPosition());
+  }
+
+  public static Command algaeUp(AlgaeIntake algae) {
+    return Commands.run(() -> {
+      algae.goToPosition(AlgaeIntakeConstants.upPos);
+    },
+    algae).until(() -> algae.atPosition(AlgaeIntakeConstants.upPos));
   }
 
   // public static Command intakeAlgae(AlgaeIntake algae) {

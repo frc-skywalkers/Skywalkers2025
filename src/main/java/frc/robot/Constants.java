@@ -40,9 +40,11 @@ public final class Constants {
 
   public static final class AlgaeIntakeConstants {
     public static final int pivotID = 54; // change
-    public static final int wheelID = 55;
+    // public static final int wheelID = 55;
 
     public static final double GEAR_RATIO = 45.0;
+
+    public static final double upPos = 0.0; //for CCR, need this value
 
     public static final double outPos = -1.3;
     public static final double stow = 0.05;
@@ -75,7 +77,8 @@ public final class Constants {
 
     public static final double intakeVolts = 4.0;
     public static final double holdVolts = -0.01;
-    public static final double outtakeVolts = 2.0;
+    public static final double outtakeVolts = 2.2;
+    public static final double L1outtakeVolts = 0.8;
 
     public static final double tolerance = 0.05;
 
@@ -93,11 +96,11 @@ public final class Constants {
 
     public static final double GEAR_RATIO = 20.0;
 
-    public static final double groundPos = 0.4;
-    public static final double level1 = 6.035; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
-    public static final double level2 = 9.0;
-    public static final double level3 = 17.0;
-    public static final double level4 = 24.5; // hahahah
+    public static final double groundPos = 0.0;
+    public static final double level1 = 4.5 - 4.1; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
+    public static final double level2 = 9.28 - 4.1;
+    public static final double level3 = 18.05 - 4.1;
+    public static final double level4 = 28.8;
     public static final double upperAlgae = 24.463;
     public static final double lowerAlgae = 14.674;
     public static final double coralStation = 3.188; // BAD!!
@@ -108,7 +111,7 @@ public final class Constants {
 
     public static final double tolerance = 0.02;
 
-    public static final double kTopLimit = 25.0; // radians
+    public static final double kTopLimit = 30.2; // radians
     public static final double kBottomLimit = 0; // ?
     public static final int encoderID = 62; // change this number wheehoo
   }
@@ -126,7 +129,7 @@ public final class Constants {
     public static final double mm_accel = mm_cruisevel * 10.0;
     public static final double mm_jerk = mm_accel * 10.0;
 
-    public static final int hangID = 20;
+    public static final int hangID = 40;
     public static final int encoderID = 21;
   }
 

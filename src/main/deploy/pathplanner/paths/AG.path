@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.160652488425925,
-        "y": 5.492622612847222
+        "x": 5.08040870949074,
+        "y": 5.347624782986111
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5569415509259255,
-        "y": 6.254181495949073
+        "x": 4.114921151620369,
+        "y": 6.651615306712963
       },
       "isLocked": false,
       "linkedName": "ReefA"
@@ -28,7 +28,12 @@
       "linkedName": "StationG"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3576377467105262,
+      "rotationDegrees": -120.38999999999999
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 127.40861517459322
+    "rotation": -53.67386677048634
   },
   "reversed": false,
   "folder": null,

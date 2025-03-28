@@ -23,11 +23,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.CoralIntakeConstants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.HangConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.OperatorCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.algaeintake.AlgaeIntake;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIO;
+import frc.robot.subsystems.algaeintake.AlgaeIntakeIOTalonFX;
 import frc.robot.subsystems.coralintake.CoralIntake;
 import frc.robot.subsystems.coralintake.CoralIntakeIO;
 import frc.robot.subsystems.coralintake.CoralIntakeIOTalonFX;
@@ -40,6 +45,10 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.hang.Hang;
+import frc.robot.subsystems.hang.HangIO;
+import frc.robot.subsystems.hang.HangIOTalonFX;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -51,10 +60,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  //   private final AlgaeIntake a_intake;
+  private final AlgaeIntake a_intake;
   private final CoralIntake c_intake;
   private final Elevator elevator;
-  //   private final Hang hang;
+  private final Hang hang;
   //   private final Vision vision;
 
   // Controller
@@ -75,9 +84,9 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
+        a_intake = new AlgaeIntake(new AlgaeIntakeIOTalonFX());
         c_intake = new CoralIntake(new CoralIntakeIOTalonFX());
-        // hang = new Hang(new HangIOTalonFX());
+        hang = new Hang(new HangIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
 
         break;
@@ -91,9 +100,9 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
         c_intake = new CoralIntake(new CoralIntakeIO() {});
-        // hang = new Hang(new HangIO() {});
+        hang = new Hang(new HangIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
 
@@ -106,14 +115,22 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
+        a_intake = new AlgaeIntake(new AlgaeIntakeIO() {});
         c_intake = new CoralIntake(new CoralIntakeIO() {});
-        // hang = new Hang(new HangIO() {});
+        hang = new Hang(new HangIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         break;
     }
 
-    NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
+    NamedCommands.registerCommand("algae up", OperatorCommands.algaeUp(a_intake));
+    NamedCommands.registerCommand("elevator L2", OperatorCommands.moveElevator(elevator, ElevatorConstants.level2));
+    NamedCommands.registerCommand("elevator L3", OperatorCommands.moveElevator(elevator, ElevatorConstants.level3));
+    NamedCommands.registerCommand("elevator L4", OperatorCommands.moveElevator(elevator, ElevatorConstants.level4));
+    NamedCommands.registerCommand("elevator coral station", OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
+    NamedCommands.registerCommand("intake coral", OperatorCommands.intakeCoral(c_intake));
+    NamedCommands.registerCommand("outtake coral", OperatorCommands.outtakeCoral(c_intake));
+
+    // NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
 
     // NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
 
@@ -234,21 +251,43 @@ public class RobotContainer {
     // set gyro to latest approved vision measurement
 
     // CCR
-    operator.a().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level1));
+
+    operator.a().onTrue(OperatorCommands.algaeUp(a_intake));
+    
+    // operator.a().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level1));
     operator.x().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level2));
     operator.b().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level3));
     operator.y().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level4));
 
     operator.leftBumper().onTrue(OperatorCommands.intakeCoral(c_intake));
     operator.leftTrigger().onTrue((OperatorCommands.outtakeCoral(c_intake)));
+    operator
+        .rightTrigger()
+        .onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(-CoralIntakeConstants.outtakeVolts)));
+    operator.rightBumper().onTrue(Commands.runOnce(() -> c_intake.runWheelVolts(0)));
+
+    operator
+        .povLeft()
+        .onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
+    operator.povRight().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.groundPos));
 
     operator
         .povUp()
-        .onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
-    operator.povDown().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.groundPos));
+        .onTrue(OperatorCommands.hangUp(hang));
+
+    operator
+        .povDown()
+        .onTrue(Commands.runOnce(() -> hang.runVolts(HangConstants.liftDownVolts)));
+
+
+    //operator
+        //.povRight()
+       // .onTrue(
+           // Commands.runOnce(() -> c_intake.runWheelVolts(CoralIntakeConstants.L1outtakeVolts)));
+      
 
     // dangerous
-    controller.leftBumper().onTrue(DriveCommands.alignReef(drive, controller));
+    // controller.leftBumper().onTrue(DriveCommands.alignReef(drive, controller));
 
     // operator.a().onTrue(OperatorCommands.moveElevator(elevator, 9.0)); // L2
     // operator.b().onTrue(OperatorCommands.moveElevator(elevator, 17.0)); // L3
@@ -273,7 +312,7 @@ public class RobotContainer {
 
     // *** TESTING *** ///
     // elevator.setDefaultCommand(
-    //     Commands.runOnce(() -> elevator.runVolts(operator.getLeftX() * 3.8), elevator));
+    //     Commands.runOnce(() -> elevator.runVolts(operator.getLeftX() * 4.55), elevator));
     // c_intake.setDefaultCommand(
     //     Commands.runOnce(() -> c_intake.runVolts(operator.getRightX() * 1.2), c_intake));
 

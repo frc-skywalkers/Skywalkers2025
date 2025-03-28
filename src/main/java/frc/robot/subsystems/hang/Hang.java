@@ -1,5 +1,6 @@
 package frc.robot.subsystems.hang;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.HangConstants;
@@ -19,6 +20,7 @@ public class Hang extends SubsystemBase {
     // This method will be called once per scheduler run
     io.updateInputs(inputs);
     Logger.processInputs(("Hang"), inputs);
+    SmartDashboard.putNumber("Neeru Current", getCurrent());
     // Logger.recordOutput("Hang/atPosition", atPosition(setp));
   }
   ;
@@ -49,6 +51,10 @@ public class Hang extends SubsystemBase {
 
   public void stop() {
     io.stop();
+  }
+
+  public boolean hitPosition(){
+    return Math.abs(getCurrent()) > 50;
   }
 
   @AutoLogOutput
