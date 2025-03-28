@@ -19,7 +19,8 @@ public class CoralIntake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("CoralIntake", inputs);
 
-    Logger.recordOutput("CoralIntake/hasPiece", inputs.hasPiece);
+    Logger.recordOutput(
+        "CoralIntake/hasPiece", inputs.hasPiece); // returns beambreak.get, true = beam not broken
   }
 
   // public void runVolts(double volts) {

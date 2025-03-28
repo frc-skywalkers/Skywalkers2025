@@ -28,6 +28,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,7 +43,7 @@ import java.util.function.Supplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
-  private static final double ANGLE_KP = 10.0; // was 3.5
+  private static final double ANGLE_KP = 5.0; // was 3.5
   private static final double ANGLE_KD = 0.1;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
@@ -307,15 +308,11 @@ public class DriveCommands {
   public static Command autoAlignToPose(Drive drive, CommandXboxController joystick, Pose2d goal) {
     ProfiledPIDController headingController =
         new ProfiledPIDController(
-            3.0,
-            0.0,
-            0.05,
-            new Constraints(
-                drive.getMaxAngularSpeedRadPerSec(), drive.getMaxAngularSpeedRadPerSec()));
+            0.05, 0.0, 0.0, new Constraints(1, 1)); // radians per second of angular speed, was drive.getMaxAngularSpeedRadPerSec() for both
     ProfiledPIDController xController =
-        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+        new ProfiledPIDController(0.02, 0.0, 0, new Constraints(0.05, 1.0));
     ProfiledPIDController yController =
-        new ProfiledPIDController(5.0, 0.0, 0.1, new Constraints(3.0, 3.0));
+        new ProfiledPIDController(0.02, 0.0, 0, new Constraints(0.05, 1.0));
     headingController.reset(
         drive.getPose().getRotation().getRadians(),
         drive.getFieldRelVelocity().omegaRadiansPerSecond);
@@ -327,10 +324,17 @@ public class DriveCommands {
     return Commands.run(
             () -> {
               double omegaOutput =
-                  headingController.calculate(
+                  -headingController.calculate(
                       drive.getPose().getRotation().getRadians(), goal.getRotation().getRadians());
               double xOutput = xController.calculate(drive.getPose().getX(), goal.getX());
               double yOutput = yController.calculate(drive.getPose().getY(), goal.getY());
+
+              SmartDashboard.putNumber(
+                  "R error",
+                  (goal.getRotation().getRadians() - drive.getPose().getRotation().getRadians())
+                      * 180
+                      / Math.PI);
+
               double omegaSetpoint = headingController.getSetpoint().velocity;
               double xSetpoint = xController.getSetpoint().velocity;
               double ySetpoint = yController.getSetpoint().velocity;
@@ -351,6 +355,10 @@ public class DriveCommands {
 
     Pose2d currGoal;
 
+    if (tagID == -1) {
+      return Commands.run(() -> {});
+    }
+
     if (isLeftReef) {
       currGoal = VisionConstants.leftReefPoses[tagID];
     } else {
@@ -365,6 +373,10 @@ public class DriveCommands {
         (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
 
     Pose2d currGoal;
+
+    if (tagID == -1) {
+      return Commands.run(() -> {});
+    }
 
     currGoal = VisionConstants.otherPoses[tagID];
 

@@ -74,8 +74,8 @@ public final class Constants {
     public static final double horiz = 0.767;
 
     public static final double intakeVolts = 4.0;
-    public static final double holdVolts = 0.5;
-    public static final double outtakeVolts = -2.0;
+    public static final double holdVolts = -0.01;
+    public static final double outtakeVolts = 2.0;
 
     public static final double tolerance = 0.05;
 
@@ -84,7 +84,7 @@ public final class Constants {
     public static final double mm_jerk = mm_accel * 4.0;
 
     public static final int encoderID = 300;
-    public static final int beamBreakID = 0;
+    public static final int beamBreakID = 9;
   }
 
   public static final class ElevatorConstants {
@@ -95,9 +95,9 @@ public final class Constants {
 
     public static final double groundPos = 0.4;
     public static final double level1 = 6.035; // BAD CONSTANT FAKE CONSTANT DO NOT USE FR
-    public static final double level2 = 6.148;
-    public static final double level3 = 15.642;
-    public static final double level4 = 0.0; // hahahah
+    public static final double level2 = 9.0;
+    public static final double level3 = 17.0;
+    public static final double level4 = 24.5; // hahahah
     public static final double upperAlgae = 24.463;
     public static final double lowerAlgae = 14.674;
     public static final double coralStation = 3.188; // BAD!!

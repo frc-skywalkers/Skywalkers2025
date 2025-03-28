@@ -245,14 +245,16 @@ public class Drive extends SubsystemBase {
           0);
       LimelightHelpers.PoseEstimate mtestimate =
           LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
-        doRejectUpdate = true;
-      }
-      if (mtestimate.tagCount == 0) {
-        doRejectUpdate = true;
-      }
-      if (!doRejectUpdate) {
-        poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
+      if (mtestimate != null) {
+        if (Math.abs(gyroInputs.yawVelocityRadPerSec) > Units.degreesToRadians(720)) {
+          doRejectUpdate = true;
+        }
+        if (mtestimate.tagCount == 0) {
+          doRejectUpdate = true;
+        }
+        if (!doRejectUpdate) {
+          poseEstimator.addVisionMeasurement(mtestimate.pose, mtestimate.timestampSeconds);
+        }
       }
 
       Logger.recordOutput("Drive/estimatedX", getPose().getX());
@@ -260,10 +262,12 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput(
           "Drive/estimatedRDegrees", getPose().getRotation().getDegrees()); // no Vis influence
 
-      Logger.recordOutput("Drive/visionX", mtestimate.pose.getX());
-      Logger.recordOutput("Drive/visionY", mtestimate.pose.getY());
-      Logger.recordOutput("Drive/visionRDegrees", mtestimate.pose.getRotation().getDegrees());
-      visionRot = mtestimate.pose.getRotation().getDegrees();
+      if (mtestimate != null) {
+        Logger.recordOutput("Drive/visionX", mtestimate.pose.getX());
+        Logger.recordOutput("Drive/visionY", mtestimate.pose.getY());
+        Logger.recordOutput("Drive/visionRDegrees", mtestimate.pose.getRotation().getDegrees());
+        visionRot = mtestimate.pose.getRotation().getDegrees();
+      }
     }
 
     // Update gyro alert

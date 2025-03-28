@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.FeedForwardCharacterization;
 import frc.robot.commands.OperatorCommands;
@@ -111,7 +113,7 @@ public class RobotContainer {
         break;
     }
 
-    // NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
+    NamedCommands.registerCommand("elevator up", OperatorCommands.moveElevator(elevator, 6.63));
 
     // NamedCommands.registerCommand("elevator down", OperatorCommands.moveElevator(elevator, 0));
 
@@ -196,6 +198,7 @@ public class RobotContainer {
               () -> -controller.getLeftX(),
               () -> -controller.getRightX()));
     }
+
     // joystick hang for testing
     // hang.setDefaultCommand(
     //     Commands.run(
@@ -204,18 +207,18 @@ public class RobotContainer {
     //         },
     //         hang));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
+    // // Lock to 0° when A button is held
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         DriveCommands.joystickDriveAtAngle(
+    //             drive,
+    //             () -> -controller.getLeftY(),
+    //             () -> -controller.getLeftX(),
+    //             () -> new Rotation2d()));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // // Switch to X pattern when X button is pressed
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed //CHANGE FOR COMP, 180
     controller
@@ -224,29 +227,35 @@ public class RobotContainer {
             Commands.runOnce(
                     () ->
                         drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(180))),
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(0))),
                     drive)
                 .ignoringDisable(true));
 
     // set gyro to latest approved vision measurement
-    controller
-        .y()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(
-                                drive.getPose().getTranslation(),
-                                new Rotation2d(drive.getVisionRot()))),
-                    drive)
-                .ignoringDisable(true));
 
-    controller.povDown().onTrue(OperatorCommands.zeroElevator(elevator)); // move this somewhere
+    // CCR
+    operator.a().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level1));
+    operator.x().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level2));
+    operator.b().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level3));
+    operator.y().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.level4));
 
-    // TESTING 3/15
-    operator.a().onTrue(OperatorCommands.moveElevator(elevator, 8.0));
-    operator.b().onTrue(OperatorCommands.moveElevator(elevator, 22.0));
-    operator.x().onTrue(OperatorCommands.moveElevator(elevator, 0.0));
+    operator.leftBumper().onTrue(OperatorCommands.intakeCoral(c_intake));
+    operator.leftTrigger().onTrue((OperatorCommands.outtakeCoral(c_intake)));
+
+    operator.povUp().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
+    operator.povDown().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.groundPos));
+
+    //dangerous
+    controller.leftBumper().onTrue(DriveCommands.alignReef(drive, controller));
+
+
+    // operator.a().onTrue(OperatorCommands.moveElevator(elevator, 9.0)); // L2
+    // operator.b().onTrue(OperatorCommands.moveElevator(elevator, 17.0)); // L3
+    // operator.y().onTrue(OperatorCommands.moveElevator(elevator, 24.5));
+    // operator.x().onTrue(OperatorCommands.moveElevator(elevator, 0.0));
+
+
+    // operator.y().onTrue(DriveCommands.alignReef(drive, operator));
 
     // VCR CONTROLS
     // operator.povDown().onTrue(OperatorCommands.goToLowerAlgae(c_intake, elevator, a_intake));

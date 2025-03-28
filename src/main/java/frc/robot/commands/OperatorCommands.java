@@ -2,9 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.AlgaeIntakeConstants;
+// import frc.robot.Constants.AlgaeIntakeConstants;
 import frc.robot.Constants.CoralIntakeConstants;
-import frc.robot.subsystems.algaeintake.AlgaeIntake;
+// import frc.robot.subsystems.algaeintake.AlgaeIntake;
 import frc.robot.subsystems.coralintake.CoralIntake;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.hang.Hang;
@@ -118,14 +118,14 @@ public class OperatorCommands {
         .until(() -> hang.atPosition(h_pos));
   }
 
-  public static Command moveAlgae(AlgaeIntake algae, double a_pos) {
-    return Commands.run(
-            () -> {
-              algae.goToPosition(a_pos);
-            },
-            algae)
-        .until(() -> algae.atPosition(a_pos));
-  }
+  // public static Command moveAlgae(AlgaeIntake algae, double a_pos) {
+  //   return Commands.run(
+  //           () -> {
+  //             algae.goToPosition(a_pos);
+  //           },
+  //           algae)
+  //       .until(() -> algae.atPosition(a_pos));
+  // }
 
   // public static Command moveCoral(CoralIntake coral, double c_pos) {
   //   return Commands.run(
@@ -166,29 +166,29 @@ public class OperatorCommands {
             coral);
   }
 
-  public static Command intakeAlgae(AlgaeIntake algae) {
-    return (moveAlgae(algae, AlgaeIntakeConstants.outPos))
-        .andThen(
-            () -> {
-              algae.runWheelVolts(AlgaeIntakeConstants.intakeVolts);
-            },
-            algae);
-  }
+  // public static Command intakeAlgae(AlgaeIntake algae) {
+  //   return (moveAlgae(algae, AlgaeIntakeConstants.outPos))
+  //       .andThen(
+  //           () -> {
+  //             algae.runWheelVolts(AlgaeIntakeConstants.intakeVolts);
+  //           },
+  //           algae);
+  // }
 
-  public static Command outtakeAlgae(AlgaeIntake algae) {
-    return Commands.run(
-            () -> {
-              algae.runWheelVolts(AlgaeIntakeConstants.outtakeVolts);
-            },
-            algae)
-        .withTimeout(0.8)
-        .andThen(
-            () -> {
-              algae.stopWheels();
-            },
-            algae)
-        .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow));
-  }
+  // public static Command outtakeAlgae(AlgaeIntake algae) {
+  //   return Commands.run(
+  //           () -> {
+  //             algae.runWheelVolts(AlgaeIntakeConstants.outtakeVolts);
+  //           },
+  //           algae)
+  //       .withTimeout(0.8)
+  //       .andThen(
+  //           () -> {
+  //             algae.stopWheels();
+  //           },
+  //           algae)
+  //       .andThen(moveAlgae(algae, AlgaeIntakeConstants.stow));
+  // }
 
   // public static Command goToLevel1(CoralIntake coral, Elevator elevator, AlgaeIntake algae) {
   //   return moveAlgae(algae, AlgaeIntakeConstants.stow)

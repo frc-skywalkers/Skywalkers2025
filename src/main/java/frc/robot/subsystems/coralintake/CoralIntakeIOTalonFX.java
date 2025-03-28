@@ -161,6 +161,6 @@ public class CoralIntakeIOTalonFX implements CoralIntakeIO {
   }
 
   public boolean hasPiece() {
-    return beamBreak.get();
+    return !beamBreak.get(); // beam broken = .get() is false = has Piece is true
   }
 }
