@@ -81,7 +81,8 @@
 //   }
 
 //   // public boolean atPosition() {
-//   //   boolean ret = Math.abs(getPositionRad() - inputs.goalPos) < AlgaeIntakeConstants.tolerance;
+//   //   boolean ret = Math.abs(getPositionRad() - inputs.goalPos) <
+// AlgaeIntakeConstants.tolerance;
 //   //   Logger.recordOutput("AlgaeIntake/atPosition", ret);
 //   //   if (ret) {
 //   //     System.out.println("REACHED POSITION!!!");

@@ -106,7 +106,8 @@
 //     inputs.positionRad = Units.rotationsToRadians(position.getValueAsDouble());
 //     inputs.velocityRadPerSec = Units.rotationsToRadians(velocity.getValueAsDouble());
 //     inputs.appliedVolts = appliedVolts.getValueAsDouble();
-//     inputs.currentAmps = new double[] {current.getValueAsDouble(), wheelCurrent.getValueAsDouble()};
+//     inputs.currentAmps = new double[] {current.getValueAsDouble(),
+// wheelCurrent.getValueAsDouble()};
 //     inputs.goalPos = goalPos;
 //     inputs.setpointPos = goal.getValueAsDouble();
 

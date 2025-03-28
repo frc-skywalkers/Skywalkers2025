@@ -308,7 +308,13 @@ public class DriveCommands {
   public static Command autoAlignToPose(Drive drive, CommandXboxController joystick, Pose2d goal) {
     ProfiledPIDController headingController =
         new ProfiledPIDController(
-            0.05, 0.0, 0.0, new Constraints(1, 1)); // radians per second of angular speed, was drive.getMaxAngularSpeedRadPerSec() for both
+            0.05,
+            0.0,
+            0.0,
+            new Constraints(
+                1,
+                1)); // radians per second of angular speed, was drive.getMaxAngularSpeedRadPerSec()
+    // for both
     ProfiledPIDController xController =
         new ProfiledPIDController(0.02, 0.0, 0, new Constraints(0.05, 1.0));
     ProfiledPIDController yController =

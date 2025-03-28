@@ -242,18 +242,18 @@ public class RobotContainer {
     operator.leftBumper().onTrue(OperatorCommands.intakeCoral(c_intake));
     operator.leftTrigger().onTrue((OperatorCommands.outtakeCoral(c_intake)));
 
-    operator.povUp().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
+    operator
+        .povUp()
+        .onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.coralStation));
     operator.povDown().onTrue(OperatorCommands.moveElevator(elevator, ElevatorConstants.groundPos));
 
-    //dangerous
+    // dangerous
     controller.leftBumper().onTrue(DriveCommands.alignReef(drive, controller));
-
 
     // operator.a().onTrue(OperatorCommands.moveElevator(elevator, 9.0)); // L2
     // operator.b().onTrue(OperatorCommands.moveElevator(elevator, 17.0)); // L3
     // operator.y().onTrue(OperatorCommands.moveElevator(elevator, 24.5));
     // operator.x().onTrue(OperatorCommands.moveElevator(elevator, 0.0));
-
 
     // operator.y().onTrue(DriveCommands.alignReef(drive, operator));
 
